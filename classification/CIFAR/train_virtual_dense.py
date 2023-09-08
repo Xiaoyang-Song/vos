@@ -14,6 +14,7 @@ from models.allconv import AllConvNet
 from models.wrn_virtual import WideResNet
 from models.densenet import DenseNet3
 from tqdm import tqdm
+from dataset import *
 
 # go through rigamaroo to do ...utils.display_results import show_performance
 if __package__ is None:
@@ -25,8 +26,8 @@ if __package__ is None:
 
 parser = argparse.ArgumentParser(description='Trains a CIFAR Classifier',
                                  formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument('--dataset', type=str, choices=['cifar10', 'cifar100'],
-                    default='cifar10',
+parser.add_argument('--dataset', type=str,
+                    default='CIFAR10-SVHN',
                     help='Choose between CIFAR-10, CIFAR-100.')
 parser.add_argument('--model', '-m', type=str, default='dense',
                     choices=['allconv', 'wrn', 'dense'], help='Choose architecture.')
@@ -76,26 +77,43 @@ print(state)
 torch.manual_seed(1)
 np.random.seed(1)
 
-# mean and standard deviation of channels of CIFAR-10 images
-mean = [x / 255 for x in [125.3, 123.0, 113.9]]
-std = [x / 255 for x in [63.0, 62.1, 66.7]]
 
-train_transform = trn.Compose([trn.RandomHorizontalFlip(), trn.RandomCrop(32, padding=4),
-                               trn.ToTensor(), trn.Normalize(mean, std)])
-test_transform = trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)])
-
-if args.dataset == 'cifar10':
+if args.dataset == 'CIFAR10-SVHN':
+    # mean and standard deviation of channels of CIFAR-10 images
+    mean = [x / 255 for x in [125.3, 123.0, 113.9]]
+    std = [x / 255 for x in [63.0, 62.1, 66.7]]
+    train_transform = trn.Compose([trn.RandomHorizontalFlip(), trn.RandomCrop(32, padding=4),
+                                   trn.ToTensor(), trn.Normalize(mean, std)])
+    test_transform = trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)])
     train_data = dset.CIFAR10('./Dataset/CIFAR-10',
                               train=True, transform=train_transform, download=True)
     test_data = dset.CIFAR10('./Dataset/CIFAR-10',
                              train=False, transform=test_transform, download=True)
     num_classes = 10
+    num_channels = 3
+
+elif args.dataset == 'MNIST-FashionMNIST':
+    data = DSET(args.dataset, False, 128, 128, None, None)
+    train_data, test_data = data.ind_train, data.ind_val
+    num_classes = 10
+    num_channels = 1
+
+elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
+    data = DSET(args.dataset, True, 128, 128, [0, 1, 2, 3, 4, 5, 6, 7], [8, 9])
+    train_data, test_data = data.ind_train, data.ind_val
+    num_classes = 8
+
+    if args.dataset == 'SVHN':
+        num_channels = 3
+    else:
+        num_channels = 1
+
+elif args.dataset == 'MNIST':
+    data = DSET(args.dataset, True, 128, 128, [2, 3, 6, 8, 9], [1, 7])
+    train_data, test_data = data.ind_train, data.ind_val
+    num_channels = 1
 else:
-    train_data = dset.CIFAR100('/nobackup-slow/dataset/my_xfdu/cifarpy',
-                               train=True, transform=train_transform, download=True)
-    test_data = dset.CIFAR100('/nobackup-slow/dataset/my_xfdu/cifarpy',
-                              train=False, transform=test_transform, download=True)
-    num_classes = 100
+    assert False
 
 
 calib_indicator = ''
@@ -115,7 +133,7 @@ if args.model == 'allconv':
     net = AllConvNet(num_classes)
 elif args.model == 'dense':
     net = DenseNet3(100, num_classes, 12, reduction=0.5, bottleneck=True, dropRate=0.0, normalizer=None,
-                    k=None, info=None)
+                    k=None, info=None, num_channels=num_channels)
 else:
     net = WideResNet(args.layers, num_classes,
                      args.widen_factor, dropRate=args.droprate)
@@ -144,11 +162,6 @@ if args.ngpu > 0:
     torch.cuda.manual_seed(1)
 
 cudnn.benchmark = True  # fire on all cylinders
-
-if args.dataset == 'cifar10':
-    num_classes = 10
-else:
-    num_classes = 100
 
 
 weight_energy = torch.nn.Linear(num_classes, 1).cuda()
