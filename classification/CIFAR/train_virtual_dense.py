@@ -112,6 +112,8 @@ elif args.dataset == 'MNIST':
     data = DSET(args.dataset, True, 128, 128, [2, 3, 6, 8, 9], [1, 7])
     train_data, test_data = data.ind_train, data.ind_val
     num_channels = 1
+    num_classes = 5
+
 else:
     assert False
 
