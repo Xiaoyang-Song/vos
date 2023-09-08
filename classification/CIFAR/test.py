@@ -196,7 +196,7 @@ elif args.score == 'M':
 
     if 'cifar10_' in args.method_name:
         train_data = dset.CIFAR10(
-            './Dataset/CIFAR-10', train=True, transform=test_transform)
+            './Dataset/CIFAR-10', train=True, transform=test_transform, download=True)
     else:
         train_data = dset.CIFAR100(
             '/nobackup-slow/dataset/cifarpy', train=True, transform=test_transform)
