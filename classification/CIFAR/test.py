@@ -279,21 +279,21 @@ def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
 
 
 # /////////////// Textures ///////////////
-ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/dtd/images",
-                            transform=trn.Compose([trn.Resize(32), trn.CenterCrop(32),
-                                                   trn.ToTensor(), trn.Normalize(mean, std)]))
-ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-                                         num_workers=4, pin_memory=True)
-print('\n\nTexture Detection')
-get_and_print_results(ood_loader)
+# ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/dtd/images",
+#                             transform=trn.Compose([trn.Resize(32), trn.CenterCrop(32),
+#                                                    trn.ToTensor(), trn.Normalize(mean, std)]))
+# ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
+#                                          num_workers=4, pin_memory=True)
+# print('\n\nTexture Detection')
+# get_and_print_results(ood_loader)
 
 # /////////////// SVHN /////////////// # cropped and no sampling of the test set
-ood_data = svhn.SVHN(root='/nobackup-slow/dataset/svhn/', split="test",
+ood_data = svhn.SVHN(root='./Datasets/SVHN', split="test",
                      transform=trn.Compose(
                          [  # trn.Resize(32),
                              trn.ToTensor(), trn.Normalize(mean, std)]), download=False)
 ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-                                         num_workers=2, pin_memory=True)
+                                         num_workers=1, pin_memory=True)
 print('\n\nSVHN Detection')
 get_and_print_results(ood_loader)
 
