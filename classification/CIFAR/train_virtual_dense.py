@@ -13,6 +13,7 @@ from tqdm import tqdm
 from models.allconv import AllConvNet
 from models.wrn_virtual import WideResNet
 from models.densenet import DenseNet3
+from tqdm import tqdm
 
 # go through rigamaroo to do ...utils.display_results import show_performance
 if __package__ is None:
@@ -343,7 +344,7 @@ with open(os.path.join(args.save, args.dataset + calib_indicator + '_' + args.mo
 print('Beginning Training\n')
 
 # Main loop
-for epoch in range(start_epoch, args.epochs):
+for epoch in tqdm(range(start_epoch, args.epochs)):
     state['epoch'] = epoch
 
     begin_epoch = time.time()
