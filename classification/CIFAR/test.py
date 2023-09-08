@@ -288,10 +288,14 @@ def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
 # get_and_print_results(ood_loader)
 
 # /////////////// SVHN /////////////// # cropped and no sampling of the test set
-ood_data = svhn.SVHN(root='./Datasets/SVHN', split="test",
+ood_data = dset.SVHN('./Datasets/SVHN', split='test', download=True,
                      transform=trn.Compose(
                          [  # trn.Resize(32),
-                             trn.ToTensor(), trn.Normalize(mean, std)]), download=True)
+                             trn.ToTensor(), trn.Normalize(mean, std)]))
+# ood_data = svhn.SVHN(root='./Datasets/SVHN', split="test",
+#                      transform=trn.Compose(
+#                          [  # trn.Resize(32),
+#                              trn.ToTensor(), trn.Normalize(mean, std)]), download=True)
 ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
                                          num_workers=1, pin_memory=True)
 print('\n\nSVHN Detection')
