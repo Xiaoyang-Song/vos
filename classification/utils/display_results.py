@@ -118,9 +118,9 @@ def print_measures_with_std(aurocs, auprs, fprs, method_name='Ours', recall_leve
     print('  TPR{:d} TPR{:d} AUROC AUPR'.format(
         int(100*recall_level), int(100*recall_level_99)))
     print('& {:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
-        100*np.mean(np.array(fprs), dim=-1)[0], 100*np.mean(np.array(fprs), dim=-1)[1], 100*np.mean(aurocs), 100*np.mean(auprs)))
+        100*np.mean(np.array(fprs), axis=-1)[0], 100*np.mean(np.array(fprs), axis=-1)[1], 100*np.mean(aurocs), 100*np.mean(auprs)))
     print('& {:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
-        100*np.std(np.array(fprs), dim=-1)[0], 100*np.std(np.array(fprs), dim=-1)[1], 100*np.std(aurocs), 100*np.std(auprs)))
+        100*np.std(np.array(fprs), axis=-1)[0], 100*np.std(np.array(fprs), axis=-1)[1], 100*np.std(aurocs), 100*np.std(auprs)))
     # print('FPR{:d}:\t\t\t{:.2f}\t+/- {:.2f}'.format(int(100 * recall_level), 100 * np.mean(fprs), 100 * np.std(fprs)))
     # print('AUROC: \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(aurocs), 100 * np.std(aurocs)))
     # print('AUPR:  \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(auprs), 100 * np.std(auprs)))
