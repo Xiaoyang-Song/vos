@@ -94,9 +94,10 @@ def show_performance(pos, neg, method_name='Ours', recall_level=recall_level_def
     auroc, aupr, fpr = get_measures(pos[:], neg[:], recall_level)
 
     print('\t\t\t' + method_name)
-    print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr[0]))
     print('FPR{:d}:\t\t\t{:.2f}'.format(
-        int(100 * recall_level_99), 100 * fpr[1]))
+        int(100 * recall_level), 100 - 100 * fpr[0]))
+    print('FPR{:d}:\t\t\t{:.2f}'.format(
+        int(100 * recall_level_99), 100 - 100 * fpr[1]))
     print('AUROC:\t\t\t{:.2f}'.format(100 * auroc))
     print('AUPR:\t\t\t{:.2f}'.format(100 * aupr))
     # print('FDR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fdr))
@@ -107,7 +108,7 @@ def print_measures(auroc, aupr, fpr, method_name='Ours', recall_level=recall_lev
     print('  TPR{:d} TPR{:d} AUROC AUPR'.format(
         int(100*recall_level), int(100*recall_level_99)))
     print('{:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
-        100*fpr[0], 100*fpr[1], 100*auroc, 100*aupr))
+        100 - 100*fpr[0], 100 - 100*fpr[1], 100*auroc, 100*aupr))
     # print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr))
     # print('AUROC: \t\t\t{:.2f}'.format(100 * auroc))
     # print('AUPR:  \t\t\t{:.2f}'.format(100 * aupr))
@@ -118,9 +119,9 @@ def print_measures_with_std(aurocs, auprs, fprs, method_name='Ours', recall_leve
     print('  TPR{:d} TPR{:d} AUROC AUPR'.format(
         int(100*recall_level), int(100*recall_level_99)))
     print('{:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
-        100*np.mean(np.array(fprs), axis=-1)[0], 100*np.mean(np.array(fprs), axis=-1)[1], 100*np.mean(aurocs), 100*np.mean(auprs)))
+        100 - 100*np.mean(np.array(fprs), axis=0)[0], 100 - 100*np.mean(np.array(fprs), axis=0)[1], 100*np.mean(aurocs), 100*np.mean(auprs)))
     print('{:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
-        100*np.std(np.array(fprs), axis=-1)[0], 100*np.std(np.array(fprs), axis=-1)[1], 100*np.std(aurocs), 100*np.std(auprs)))
+        100 - 100*np.std(np.array(fprs), axis=0)[0], 100 - 100*np.std(np.array(fprs), axis=0)[1], 100*np.std(aurocs), 100*np.std(auprs)))
     # print('FPR{:d}:\t\t\t{:.2f}\t+/- {:.2f}'.format(int(100 * recall_level), 100 * np.mean(fprs), 100 * np.std(fprs)))
     # print('AUROC: \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(aurocs), 100 * np.std(aurocs)))
     # print('AUPR:  \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(auprs), 100 * np.std(auprs)))
