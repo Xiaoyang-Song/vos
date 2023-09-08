@@ -289,8 +289,8 @@ print('Error Rate {:.2f}'.format(100 * num_wrong / (num_wrong + num_right)))
 
 # /////////////// End Detection Prelims ///////////////
 
-print('\nUsing CIFAR-10 as typical data') if num_classes == 10 else print(
-    '\nUsing CIFAR-100 as typical data')
+# print('\nUsing CIFAR-10 as typical data') if num_classes == 10 else print(
+#     '\nUsing CIFAR-100 as typical data')
 
 # /////////////// Error Detection ///////////////
 
