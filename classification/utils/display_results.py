@@ -94,7 +94,9 @@ def show_performance(pos, neg, method_name='Ours', recall_level=recall_level_def
     auroc, aupr, fpr = get_measures(pos[:], neg[:], recall_level)
 
     print('\t\t\t' + method_name)
-    print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr))
+    print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr[0]))
+    print('FPR{:d}:\t\t\t{:.2f}'.format(
+        int(100 * recall_level_99), 100 * fpr[1]))
     print('AUROC:\t\t\t{:.2f}'.format(100 * auroc))
     print('AUPR:\t\t\t{:.2f}'.format(100 * aupr))
     # print('FDR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fdr))
