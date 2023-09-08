@@ -77,7 +77,7 @@ if 'cifar10_' in args.method_name:
     num_classes = 10
 else:
     test_data = dset.CIFAR100(
-        './Datasets/CIFAR-10', train=False, transform=test_transform)
+        './Datasets/CIFAR-100', train=False, transform=test_transform)
     num_classes = 100
 
 
