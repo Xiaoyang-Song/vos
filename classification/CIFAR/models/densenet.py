@@ -143,14 +143,14 @@ class DenseNet3(nn.Module):
 
     def forward(self, x):
         out = self.features(x)
-        out = F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 7)
         out = out.view(-1, self.in_planes)
         out = self.fc(out)
         return out
 
     def forward_virtual(self, x):
         out = self.features(x)
-        out = F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 7)
         # breakpoint()
         out = out.view(-1, self.in_planes)
         return self.fc(out), out
@@ -193,7 +193,7 @@ class DenseNet3(nn.Module):
         out = self.block3(out)
         out = self.relu(self.bn1(out))
         out_list.append(out)
-        out = F.avg_pool2d(out, 8)
+        out = F.avg_pool2d(out, 7)
         out = out.view(-1, self.in_planes)
 
         return self.fc(out), out_list
