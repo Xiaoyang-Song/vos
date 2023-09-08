@@ -72,12 +72,12 @@ std = [x / 255 for x in [63.0, 62.1, 66.7]]
 test_transform = trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)])
 
 if 'cifar10_' in args.method_name:
-    test_data = dset.CIFAR10('/nobackup-slow/dataset/cifarpy',
+    test_data = dset.CIFAR10('./Datasets/CIFAR-10',
                              train=False, transform=test_transform, download=True)
     num_classes = 10
 else:
     test_data = dset.CIFAR100(
-        '/nobackup-slow/dataset/cifarpy', train=False, transform=test_transform)
+        './Datasets/CIFAR-10', train=False, transform=test_transform)
     num_classes = 100
 
 
