@@ -324,6 +324,7 @@ def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
     print(in_score[:3], out_score[:3])
     auroc = np.mean(aurocs)
     aupr = np.mean(auprs)
+    print(fprs)
     fpr = np.mean(np.array(fprs), axis=-1)
     auroc_list.append(auroc)
     aupr_list.append(aupr)
