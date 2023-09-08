@@ -298,7 +298,7 @@ print('\n\nError Detection')
 show_performance(wrong_score, right_score, method_name=args.method_name)
 
 # /////////////// OOD Detection ///////////////
-auroc_list, aupr_list, fpr_list = [], [], []
+auroc_list, aupr_list, fpr_list_95, fpr_list_99 = [], [], [], []
 
 
 def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
@@ -324,10 +324,11 @@ def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
     print(in_score[:3], out_score[:3])
     auroc = np.mean(aurocs)
     aupr = np.mean(auprs)
-    fpr = np.mean(fprs)
+    fpr = np.mean(np.array(fprs), dim=-1)
     auroc_list.append(auroc)
     aupr_list.append(aupr)
-    fpr_list.append(fpr)
+    fpr_list_95.append(fpr[0])
+    fpr_list_99.append(fpr[1])
 
     if num_to_avg >= 5:
         print_measures_with_std(aurocs, auprs, fprs, args.method_name)

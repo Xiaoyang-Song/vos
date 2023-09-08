@@ -2,6 +2,7 @@ import numpy as np
 import sklearn.metrics as sk
 
 recall_level_default = 0.95
+recall_level_99 = 0.99
 
 
 def stable_cumsum(arr, rtol=1e-05, atol=1e-08):
@@ -27,10 +28,10 @@ def fpr_and_fdr_at_recall(y_true, y_score, recall_level=recall_level_default, po
     classes = np.unique(y_true)
     if (pos_label is None and
             not (np.array_equal(classes, [0, 1]) or
-                     np.array_equal(classes, [-1, 1]) or
-                     np.array_equal(classes, [0]) or
-                     np.array_equal(classes, [-1]) or
-                     np.array_equal(classes, [1]))):
+                 np.array_equal(classes, [-1, 1]) or
+                 np.array_equal(classes, [0]) or
+                 np.array_equal(classes, [-1]) or
+                 np.array_equal(classes, [1]))):
         raise ValueError("Data is not binary and pos_label is not specified")
     elif pos_label is None:
         pos_label = 1.
@@ -59,11 +60,13 @@ def fpr_and_fdr_at_recall(y_true, y_score, recall_level=recall_level_default, po
 
     last_ind = tps.searchsorted(tps[-1])
     sl = slice(last_ind, None, -1)      # [last_ind::-1]
-    recall, fps, tps, thresholds = np.r_[recall[sl], 1], np.r_[fps[sl], 0], np.r_[tps[sl], 0], thresholds[sl]
+    recall, fps, tps, thresholds = np.r_[recall[sl], 1], np.r_[
+        fps[sl], 0], np.r_[tps[sl], 0], thresholds[sl]
 
     cutoff = np.argmin(np.abs(recall - recall_level))
 
-    return fps[cutoff] / (np.sum(np.logical_not(y_true)))   # , fps[cutoff]/(fps[cutoff] + tps[cutoff])
+    # , fps[cutoff]/(fps[cutoff] + tps[cutoff])
+    return fps[cutoff] / (np.sum(np.logical_not(y_true)))
 
 
 def get_measures(_pos, _neg, recall_level=recall_level_default):
@@ -75,9 +78,10 @@ def get_measures(_pos, _neg, recall_level=recall_level_default):
 
     auroc = sk.roc_auc_score(labels, examples)
     aupr = sk.average_precision_score(labels, examples)
-    fpr = fpr_and_fdr_at_recall(labels, examples, recall_level)
+    fpr95 = fpr_and_fdr_at_recall(labels, examples, 0.95)
+    fpr99 = fpr_and_fdr_at_recall(labels, examples, 0.99)
 
-    return auroc, aupr, fpr
+    return auroc, aupr, (fpr95, fpr99)
 
 
 def show_performance(pos, neg, method_name='Ours', recall_level=recall_level_default):
@@ -98,21 +102,26 @@ def show_performance(pos, neg, method_name='Ours', recall_level=recall_level_def
 
 def print_measures(auroc, aupr, fpr, method_name='Ours', recall_level=recall_level_default):
     print('\t\t\t\t' + method_name)
-    print('  FPR{:d} AUROC AUPR'.format(int(100*recall_level)))
-    print('& {:.2f} & {:.2f} & {:.2f}'.format(100*fpr, 100*auroc, 100*aupr))
-    #print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr))
-    #print('AUROC: \t\t\t{:.2f}'.format(100 * auroc))
-    #print('AUPR:  \t\t\t{:.2f}'.format(100 * aupr))
+    print('  TPR{:d} TPR{:d} AUROC AUPR'.format(
+        int(100*recall_level), int(100*recall_level_99)))
+    print('& {:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
+        100*fpr[0], 100*fpr[1], 100*auroc, 100*aupr))
+    # print('FPR{:d}:\t\t\t{:.2f}'.format(int(100 * recall_level), 100 * fpr))
+    # print('AUROC: \t\t\t{:.2f}'.format(100 * auroc))
+    # print('AUPR:  \t\t\t{:.2f}'.format(100 * aupr))
 
 
 def print_measures_with_std(aurocs, auprs, fprs, method_name='Ours', recall_level=recall_level_default):
     print('\t\t\t\t' + method_name)
-    print('  FPR{:d} AUROC AUPR'.format(int(100*recall_level)))
-    print('& {:.2f} & {:.2f} & {:.2f}'.format(100*np.mean(fprs), 100*np.mean(aurocs), 100*np.mean(auprs)))
-    print('& {:.2f} & {:.2f} & {:.2f}'.format(100*np.std(fprs), 100*np.std(aurocs), 100*np.std(auprs)))
-    #print('FPR{:d}:\t\t\t{:.2f}\t+/- {:.2f}'.format(int(100 * recall_level), 100 * np.mean(fprs), 100 * np.std(fprs)))
-    #print('AUROC: \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(aurocs), 100 * np.std(aurocs)))
-    #print('AUPR:  \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(auprs), 100 * np.std(auprs)))
+    print('  TPR{:d} TPR{:d} AUROC AUPR'.format(
+        int(100*recall_level), int(100*recall_level_99)))
+    print('& {:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
+        100*np.mean(np.array(fprs), dim=-1)[0], 100*np.mean(np.array(fprs), dim=-1)[1], 100*np.mean(aurocs), 100*np.mean(auprs)))
+    print('& {:.2f} & {:.2f} & {:.2f} & {:.2f}'.format(
+        100*np.std(np.array(fprs), dim=-1)[0], 100*np.std(np.array(fprs), dim=-1)[1], 100*np.std(aurocs), 100*np.std(auprs)))
+    # print('FPR{:d}:\t\t\t{:.2f}\t+/- {:.2f}'.format(int(100 * recall_level), 100 * np.mean(fprs), 100 * np.std(fprs)))
+    # print('AUROC: \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(aurocs), 100 * np.std(aurocs)))
+    # print('AUPR:  \t\t\t{:.2f}\t+/- {:.2f}'.format(100 * np.mean(auprs), 100 * np.std(auprs)))
 
 
 def show_performance_comparison(pos_base, neg_base, pos_ours, neg_ours, baseline_name='Baseline',
@@ -122,8 +131,10 @@ def show_performance_comparison(pos_base, neg_base, pos_ours, neg_ours, baseline
     example scores from the baseline
     :param neg_base: 0's class scores generated by the baseline
     '''
-    auroc_base, aupr_base, fpr_base = get_measures(pos_base[:], neg_base[:], recall_level)
-    auroc_ours, aupr_ours, fpr_ours = get_measures(pos_ours[:], neg_ours[:], recall_level)
+    auroc_base, aupr_base, fpr_base = get_measures(
+        pos_base[:], neg_base[:], recall_level)
+    auroc_ours, aupr_ours, fpr_ours = get_measures(
+        pos_ours[:], neg_ours[:], recall_level)
 
     print('\t\t\t' + baseline_name + '\t' + method_name)
     print('FPR{:d}:\t\t\t{:.2f}\t\t{:.2f}'.format(
