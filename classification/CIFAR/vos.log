@@ -1,0 +1,95 @@
+
+python test.py --dataset CIFAR10-SVHN --score energy --method_name CIFAR10-SVHN_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
+Error Rate 7.07
+Error Detection
+                        CIFAR10-SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:                  75.43
+FPR99:                  53.97
+AUROC:                  92.45
+AUPR:                   45.84
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+
+
+SVHN Detection
+[-14.537645 -22.967712 -16.686214] [-9.727515  -6.0125623 -8.13967  ]
+                                CIFAR10-SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+80.84 & 44.01 & 96.78 & 99.35
+0.52 & 0.49 & 0.09 & 0.02
+
+
+python test.py --dataset SVHN --score energy --method_name SVHN_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
+Error Rate 3.20
+Error Detection
+                        SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:                  53.43
+FPR99:                  16.55
+AUROC:                  92.15
+AUPR:                   42.16
+SVHN
+
+SVHN Detection
+[ -8.309528 -15.866103 -12.04875 ] [-4.263848  -8.1834755 -4.7156763]
+                                SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+65.93 & 25.59 & 93.30 & 98.91
+0.00 & 0.00 & 0.00 & 0.00
+
+
+
+python test.py --dataset FashionMNIST --score energy --method_name FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
+Error Rate 6.55
+Error Detection
+                        FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:                  72.93
+FPR99:                  55.48
+AUROC:                  92.27
+AUPR:                   42.36
+FashionMNIST
+
+
+FashionMNIST Detection
+[-11.910851 -12.518495 -13.428553] [-5.826458  -4.3459315 -5.5221343]
+                                FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+59.54 & 32.12 & 89.28 & 97.35
+0.36 & 0.67 & 0.16 & 0.06
+
+
+python test.py --dataset MNIST --score energy --method_name MNIST_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
+Error Rate 0.20
+Error Detection
+                        MNIST_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:                  99.46
+FPR99:                  99.46
+AUROC:                  99.83
+AUPR:                   45.35
+MNIST
+
+
+MNIST Detection
+[-11.337438 -13.021447 -12.452504] [-5.9416533 -2.6634192 -4.1981373]
+                                MNIST_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+98.94 & 87.56 & 99.39 & 99.90
+0.26 & 1.32 & 0.07 & 0.01
+
+python test.py --dataset MNIST-FashionMNIST --score energy --method_name MNIST-FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
+Error Rate 0.26
+Error Detection
+                        MNIST-FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:                  90.65
+FPR99:                  90.65
+AUROC:                  98.97
+AUPR:                   32.60
+MNIST-FashionMNIST
+
+
+MNIST-FashionMNIST Detection
+[-14.550623 -14.333099 -11.739308] [-6.3126464 -7.49886   -8.123067 ]
+                                MNIST-FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+81.03 & 46.38 & 95.17 & 98.70
+1.00 & 1.34 & 0.27 & 0.09
+
+
