@@ -79,7 +79,7 @@ torch.manual_seed(1)
 np.random.seed(1)
 
 
-if args.dataset == 'CIFAR10-SVHN':
+if args.dataset == 'cifar10':
     # mean and standard deviation of channels of CIFAR-10 images
     mean = [x / 255 for x in [125.3, 123.0, 113.9]]
     std = [x / 255 for x in [63.0, 62.1, 66.7]]
@@ -92,6 +92,7 @@ if args.dataset == 'CIFAR10-SVHN':
                              train=False, transform=test_transform, download=True)
     num_classes = 10
     num_channels = 3
+    num_features = 64
 
 elif args.dataset == 'mnist':
     transform = transforms.Compose([ transforms.Resize((32, 32)), 

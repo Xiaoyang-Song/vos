@@ -365,9 +365,23 @@ if args.dataset == 'mnist':
                                 transforms.Grayscale(num_output_channels=3),
                                 transforms.ToTensor()])
     tset = torchvision.datasets.FashionMNIST("./Datasets", download=True, train=True, transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1, pin_memory=True)
+    print('\n\nFashionMNIST Detection')
+    get_and_print_results(ood_loader)
+
+    print('Testing on CIFAR10')
+    normalizer = transforms.Normalize(mean=[x/255.0 for x in [125.3, 123.0, 113.9]],
+                                    std=[x/255.0 for x in [63.0, 62.1, 66.7]])
+    transform = transforms.Compose([transforms.ToTensor(), normalizer])
+    tset = datasets.CIFAR10('./Datasets/CIFAR-10', train=True, download=True, transform=transform)
     ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True,
                                              num_workers=1, pin_memory=True)
-    print('\n\nFashionMNIST Detection')
+    get_and_print_results(ood_loader)
+
+    print('Testing on SVHN')
+    transform = transforms.Compose([transforms.ToTensor()])
+    tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1)
     get_and_print_results(ood_loader)
 else:
     print(data.name)
