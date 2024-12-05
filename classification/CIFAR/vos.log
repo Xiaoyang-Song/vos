@@ -35,6 +35,8 @@ SVHN Detection
 65.93 & 25.59 & 93.30 & 98.91
 0.00 & 0.00 & 0.00 & 0.00
 
+mnist_dense_baseline_dense_0.1_1000_40_1_10000_epoch_99 
+python test_customized.py --dataset mnist --score energy --method_name mnist_dense_baseline_dense_0.1_1000_40_1_10000_epoch_99  --num_to_avg 10 --model_name dense
 
 
 python test.py --dataset FashionMNIST --score energy --method_name FashionMNIST_dense_baseline_dense_0.1_1000_40_1_10000 --num_to_avg 10 --model_name dense
