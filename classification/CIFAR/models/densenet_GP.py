@@ -1,16 +1,8 @@
-# Copyright (c) 2017-present, Facebook, Inc.
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
-
-import math
 import torch
-import torch.nn as nn
+from torchvision import models
 import torch.nn.functional as F
-from .route import *
-
+from torch import nn
+import math
 
 class BasicBlock(nn.Module):
     def __init__(self, in_planes, out_planes, dropRate=0.0):
@@ -78,7 +70,7 @@ class DenseBlock(nn.Module):
 
     def _make_layer(self, block, in_planes, growth_rate, nb_layers, dropRate):
         layers = []
-        for i in range(nb_layers):
+        for i in range(int(nb_layers)):
             layers.append(
                 block(in_planes+i*growth_rate, growth_rate, dropRate))
         return nn.Sequential(*layers)
@@ -87,11 +79,11 @@ class DenseBlock(nn.Module):
         return self.layer(x)
 
 
-class DenseNet3(nn.Module):
+class DenseNet3GP(nn.Module):
     def __init__(self, depth, num_classes, growth_rate=12,
                  reduction=0.5, bottleneck=True, dropRate=0.0, normalizer=None,
                  out_classes=100, k=None, info=None, num_channels=3, feature_size=64):
-        super(DenseNet3, self).__init__()
+        super(DenseNet3GP, self).__init__()
 
         in_planes = 2 * growth_rate
         n = (depth - 4) / 3
@@ -256,3 +248,28 @@ class DenseNet3(nn.Module):
         out = out.view(-1, self.in_planes)
         penultimate = self.fc0(out)
         return self.fc(self.relu(penultimate)), penultimate
+    
+
+if __name__ == '__main__':
+    model = DenseNet3GP(100, 10, 1)
+    input = torch.ones((1, 1, 28, 28))
+    out = model(input)
+    print(out.shape)
+    feat, out_lst = model.feature_list(input)
+    print(feat.shape)
+    for out in out_lst:
+        print(out.shape)
+    out, penultimate = model.penultimate_forward(input)
+    print(out.shape, penultimate.shape)
+
+    # 3-channel
+    model = DenseNet3GP(100, 10, 3)
+    input = torch.ones((1, 3, 32, 32))
+    out = model(input)
+    print(out.shape)
+    feat, out_lst = model.feature_list(input)
+    print(feat.shape)
+    for out in out_lst:
+        print(out.shape)
+    out, penultimate = model.penultimate_forward(input)
+    print(out.shape, penultimate.shape)

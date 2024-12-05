@@ -13,6 +13,7 @@ from tqdm import tqdm
 from models.allconv import AllConvNet
 from models.wrn_virtual import WideResNet
 from models.densenet import DenseNet3
+from models.densenet_GP import DenseNet3GP
 from tqdm import tqdm
 from dataset import *
 
@@ -37,7 +38,7 @@ parser.add_argument('--calibration', '-c', action='store_true',
 parser.add_argument('--epochs', '-e', type=int, default=100,
                     help='Number of epochs to train.')
 parser.add_argument('--learning_rate', '-lr', type=float,
-                    default=0.1, help='The initial learning rate.')
+                    default=0.001, help='The initial learning rate.')
 parser.add_argument('--batch_size', '-b', type=int,
                     default=128, help='Batch size.')
 parser.add_argument('--test_bs', type=int, default=200)
@@ -92,11 +93,15 @@ if args.dataset == 'CIFAR10-SVHN':
     num_classes = 10
     num_channels = 3
 
-elif args.dataset == 'MNIST-FashionMNIST':
-    data = DSET(args.dataset, False, 128, 128, None, None)
-    train_data, test_data = data.ind_train, data.ind_val
+elif args.dataset == 'mnist':
+    transform = transforms.Compose([ transforms.Resize((32, 32)), 
+                                    transforms.Grayscale(num_output_channels=3),
+                                    transforms.ToTensor()])
+    train_data = torchvision.datasets.MNIST("./Datasets", download=True, transform=transform)
+    test_data = torchvision.datasets.MNIST("./Datasets", download=True, train=False, transform=transform)
     num_classes = 10
-    num_channels = 1
+    num_channels = 3
+    num_features = 32
 
 elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
     data = DSET(args.dataset, True, 128, 128, [0, 1, 2, 3, 4, 5, 6, 7], [8, 9])
@@ -120,7 +125,7 @@ else:
 
 calib_indicator = ''
 if args.calibration:
-    train_data, val_data = validation_split(train_data, val_share=0.1)
+    train_data, val_data = validation_split(train_data, val_share=0.2)
     calib_indicator = '_calib'
 
 train_loader = torch.utils.data.DataLoader(
@@ -134,8 +139,7 @@ test_loader = torch.utils.data.DataLoader(
 if args.model == 'allconv':
     net = AllConvNet(num_classes)
 elif args.model == 'dense':
-    net = DenseNet3(100, num_classes, 12, reduction=0.5, bottleneck=True, dropRate=0.0, normalizer=None,
-                    k=None, info=None, num_channels=num_channels)
+    net = DenseNet3GP(100, num_classes, growth_rate=12, reduction=0.5, bottleneck=True, dropRate=0.0, num_channels= num_channels, feature_size=num_features)
 else:
     net = WideResNet(args.layers, num_classes,
                      args.widen_factor, dropRate=args.droprate)
