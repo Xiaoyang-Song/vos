@@ -1,1 +1,5 @@
 python test_customized.py --dataset mnist --score energy --method_name mnist_dense_baseline_dense_0.1_1000_40_1_10000_epoch_99  --num_to_avg 10 --model_name dense
+
+
+python test_customized.py --dataset cifar10 --score energy --method_name cifar10_dense_baseline_dense_0.1_1000_40_1_10000  --num_to_avg 10 --model_name dense
+

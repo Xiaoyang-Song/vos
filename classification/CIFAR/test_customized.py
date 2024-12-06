@@ -68,7 +68,7 @@ print(args)
 # torch.manual_seed(1)
 # np.random.seed(1)
 
-if args.dataset == 'CIFAR10-SVHN':
+if args.dataset == 'cifar10':
     # mean and standard deviation of channels of CIFAR-10 images
     mean = [x / 255 for x in [125.3, 123.0, 113.9]]
     std = [x / 255 for x in [63.0, 62.1, 66.7]]
@@ -81,6 +81,7 @@ if args.dataset == 'CIFAR10-SVHN':
                              train=False, transform=test_transform, download=True)
     num_classes = 10
     num_channels = 3
+    num_features = 64
 
 elif args.dataset == 'mnist':
     transform = transforms.Compose([ transforms.Resize((32, 32)), 
@@ -223,7 +224,7 @@ elif args.score == 'M':
     from torch.autograd import Variable
     _, right_score, wrong_score = get_ood_scores(test_loader, in_dist=True)
 
-    if args.dataset == 'CIFAR10-SVHN':
+    if args.dataset == 'cifar10':
         # mean and standard deviation of channels of CIFAR-10 images
         mean = [x / 255 for x in [125.3, 123.0, 113.9]]
         std = [x / 255 for x in [63.0, 62.1, 66.7]]
@@ -237,6 +238,7 @@ elif args.score == 'M':
                                  train=False, transform=test_transform, download=True)
         num_classes = 10
         num_channels = 3
+        num_features = 64
 
     elif args.dataset == 'mnist':
         transform = transforms.Compose([ transforms.Resize((32, 32)), 
@@ -378,6 +380,12 @@ if args.dataset == 'mnist':
                                              num_workers=1, pin_memory=True)
     get_and_print_results(ood_loader)
 
+    print('Testing on SVHN')
+    transform = transforms.Compose([transforms.ToTensor()])
+    tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1)
+    get_and_print_results(ood_loader)
+elif args.dataset == 'cifar10':
     print('Testing on SVHN')
     transform = transforms.Compose([transforms.ToTensor()])
     tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)

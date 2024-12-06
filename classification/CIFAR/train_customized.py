@@ -129,11 +129,9 @@ if args.calibration:
     train_data, val_data = validation_split(train_data, val_share=0.2)
     calib_indicator = '_calib'
 
-train_loader = torch.utils.data.DataLoader(
-    train_data, batch_size=args.batch_size, shuffle=True,
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size, shuffle=True,
     num_workers=args.prefetch, pin_memory=True)
-test_loader = torch.utils.data.DataLoader(
-    test_data, batch_size=args.test_bs, shuffle=False,
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False,
     num_workers=args.prefetch, pin_memory=True)
 
 # Create model
