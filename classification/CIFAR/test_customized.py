@@ -272,7 +272,7 @@ print("InD Val size: ", len(val_in_scores))
 threshold = np.quantile(val_in_scores, 1 - TPR)  # Threshold at 5% FPR
 # Test on InD
 test_in_scores, test_right_scores, test_wrong_scores = get_ood_scores(test_loader, in_dist=True)
-test_in_scores = test_in_scores[val_size:val_size + ind_test_size]
+test_in_scores = test_in_scores[0:ind_test_size]
 print("InD Testing size: ", len(test_in_scores))
 test_in_correct = test_in_scores >= threshold
 test_in_accuracy = np.mean(test_in_correct)
@@ -425,7 +425,8 @@ elif args.dataset == 'imagenet10':
                                                             transforms.CenterCrop(32), 
                                                             transforms.ToTensor(),
                                                             transforms.Normalize(mean, std)]))
-    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    data = torch.utils.data.Subset(data, range(5000))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=16)
     ood_scores = get_ood_scores(ood_loader, in_dist=False)
     ood_scores = ood_scores[val_size:val_size + ood_test_size]
     print("OOD Test size: ", len(ood_scores))
@@ -443,7 +444,7 @@ elif args.dataset == 'imagenet10':
                                 transform=transforms.Compose([transforms.Resize((32, 32)), transforms.CenterCrop(32), 
                                                                 transforms.ToTensor(), 
                                                                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),]))
-    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=16)
     ood_scores = get_ood_scores(ood_loader, in_dist=False)
     ood_scores = ood_scores[val_size:val_size + ood_test_size]
     print("OOD Test size: ", len(ood_scores))

@@ -4,12 +4,12 @@ Model checkpoint loaded successfully.
 Model restored! Epoch: 99
 InD Val size:  2000
 InD Testing size:  2000
-Test In-Distribution Accuracy: 92.95%
+Test In-Distribution Accuracy: 94.65%
 ######################################
 Testing on FashionMNIST
 OOD Test size:  2000
 OOD Detection Accuracy: 50.85%
-AUROC: 70.38%
+AUROC: 71.82%
 ######################################
 Testing on CIFAR10
 Files already downloaded and verified
@@ -21,12 +21,12 @@ Testing on SVHN
 Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
 OOD Test size:  2000
 OOD Detection Accuracy: 98.55%
-AUROC: 99.63%
+AUROC: 99.66%
 ######################################
 Testing on ImageNet-c
 OOD Test size:  2000
-OOD Detection Accuracy: 99.75%
-AUROC: 99.92%
+OOD Detection Accuracy: 99.95%
+AUROC: 99.99%
 
 energy-based method
 
@@ -35,12 +35,12 @@ Namespace(test_bs=200, dataset='mnist', num_to_avg=10, validate=False, use_xent=
 Model checkpoint loaded successfully.
 InD Val size:  2000
 InD Testing size:  2000
-Test In-Distribution Accuracy: 93.40%
+Test In-Distribution Accuracy: 94.10%
 ######################################
 Testing on FashionMNIST
 OOD Test size:  2000
 OOD Detection Accuracy: 61.10%
-AUROC: 80.79%
+AUROC: 81.57%
 ######################################
 Testing on CIFAR10
 Files already downloaded and verified
@@ -52,9 +52,9 @@ Testing on SVHN
 Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
 OOD Test size:  2000
 OOD Detection Accuracy: 97.85%
-AUROC: 99.42%
+AUROC: 99.47%
 ######################################
 Testing on ImageNet-c
 OOD Test size:  2000
-OOD Detection Accuracy: 98.65%
-AUROC: 99.49%
+OOD Detection Accuracy: 98.70%
+AUROC: 99.63%
