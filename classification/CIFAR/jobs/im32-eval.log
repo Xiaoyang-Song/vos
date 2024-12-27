@@ -6,7 +6,7 @@ Model checkpoint loaded successfully.
 Model restored! Epoch: 99
 InD Val size:  1500
 InD Testing size:  100
-Test In-Distribution Accuracy: 96.00%
+Test In-Distribution Accuracy: 97.00%
 ######################################
 Testing on LSUN-C
 OOD Test size:  1600
@@ -22,5 +22,44 @@ Testing on iSUN
 OOD Test size:  1600
 OOD Detection Accuracy: 0.12%
 AUROC: 16.80%
+######################################
+Testing on Places365
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 11.23%
+######################################
+Testing on DTD Texture
+OOD Test size:  1600
+OOD Detection Accuracy: 0.75%
+AUROC: 18.67%
+######################################
+Testing on SVHN
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 9.23%
+Namespace(test_bs=200, dataset='imagenet10', num_to_avg=10, validate=False, use_xent=False, method_name='imagenet10-32-0-o1', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=16, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=True)
+Total dataset size:  13000
+Dataset size:  10400 2600 500
+1500 1600
+Model checkpoint loaded successfully.
+InD Val size:  1500
+InD Testing size:  100
+Test In-Distribution Accuracy: 98.00%
+######################################
+Testing on LSUN-C
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 4.67%
+######################################
+Testing on LSUN-R
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 6.81%
+######################################
+Testing on iSUN
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 8.06%
 ######################################
 Testing on Places365

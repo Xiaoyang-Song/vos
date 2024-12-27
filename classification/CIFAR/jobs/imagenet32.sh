@@ -16,4 +16,4 @@
 
 # Eval
 python test_customized.py --dataset imagenet10 --score energy --method_name imagenet10_dense_baseline_dense_0.1_1000_40_1_10000  --num_to_avg 10 --model_name dense --nf 32 --prefetch 16
-python test_customized.py --dataset imagenet10 --score energy --method_name imagenet10-32-o-01  --num_to_avg 10 --model_name dense --nf 32 --prefetch 16 --test_energy_baseline
+python test_customized.py --dataset imagenet10 --score energy --method_name imagenet10-32-0-o1  --num_to_avg 10 --model_name dense --nf 32 --prefetch 16 --test_energy_baseline
