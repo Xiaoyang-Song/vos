@@ -1,4 +1,27 @@
 {'dataset': 'mnist', 'model': 'dense', 'calibration': False, 'epochs': 100, 'learning_rate': 0.001, 'batch_size': 100, 'test_bs': 200, 'nf': 32, 'momentum': 0.9, 'decay': 0.0001, 'layers': 40, 'widen_factor': 2, 'droprate': 0.3, 'save': './snapshots/baseline', 'load': '', 'test': False, 'ngpu': 1, 'prefetch': 16, 'start_epoch': 40, 'sample_number': 1000, 'select': 1, 'sample_from': 10000, 'loss_weight': 0.1}
 Beginning Training
 
-  0%|          | 0/100 [00:00<?, ?it/s]
+  0%|          | 0/100 [00:00<?, ?it/s]  1%|          | 1/100 [00:56<1:33:47, 56.85s/it]Epoch   1 | Time    56 | Train Loss 2.1032 | Test Loss 2.088 | Test Error 76.98
+  2%|▏         | 2/100 [01:52<1:31:19, 55.91s/it]Epoch   2 | Time    55 | Train Loss 1.7619 | Test Loss 1.744 | Test Error 59.41
+  3%|▎         | 3/100 [02:47<1:30:03, 55.71s/it]Epoch   3 | Time    55 | Train Loss 1.5017 | Test Loss 1.479 | Test Error 48.77
+  4%|▍         | 4/100 [03:42<1:28:49, 55.52s/it]Epoch   4 | Time    55 | Train Loss 1.1541 | Test Loss 1.112 | Test Error 32.03
+  5%|▌         | 5/100 [04:37<1:27:33, 55.30s/it]Epoch   5 | Time    54 | Train Loss 0.8529 | Test Loss 0.812 | Test Error 23.95
+  6%|▌         | 6/100 [05:31<1:26:01, 54.91s/it]Epoch   6 | Time    54 | Train Loss 0.6831 | Test Loss 0.598 | Test Error 17.50
+  7%|▋         | 7/100 [06:27<1:25:16, 55.02s/it]Epoch   7 | Time    55 | Train Loss 0.4983 | Test Loss 0.474 | Test Error 12.67
+  8%|▊         | 8/100 [07:22<1:24:33, 55.15s/it]Epoch   8 | Time    55 | Train Loss 0.4531 | Test Loss 0.404 | Test Error 10.66
+  9%|▉         | 9/100 [08:16<1:23:08, 54.81s/it]Epoch   9 | Time    54 | Train Loss 0.3387 | Test Loss 0.317 | Test Error 7.99
+ 10%|█         | 10/100 [09:10<1:21:52, 54.59s/it]Epoch  10 | Time    54 | Train Loss 0.3128 | Test Loss 0.292 | Test Error 7.65
+ 11%|█         | 11/100 [10:05<1:21:03, 54.64s/it]Epoch  11 | Time    54 | Train Loss 0.2410 | Test Loss 0.230 | Test Error 5.95
+ 12%|█▏        | 12/100 [11:01<1:20:34, 54.94s/it]Epoch  12 | Time    55 | Train Loss 0.2219 | Test Loss 0.203 | Test Error 5.41
+ 13%|█▎        | 13/100 [11:56<1:19:50, 55.06s/it]Epoch  13 | Time    55 | Train Loss 0.1776 | Test Loss 0.190 | Test Error 5.06
+ 14%|█▍        | 14/100 [12:50<1:18:32, 54.80s/it]Epoch  14 | Time    54 | Train Loss 0.1963 | Test Loss 0.174 | Test Error 4.72
+ 15%|█▌        | 15/100 [13:46<1:17:57, 55.03s/it]Epoch  15 | Time    55 | Train Loss 0.1456 | Test Loss 0.159 | Test Error 4.26
+ 16%|█▌        | 16/100 [14:40<1:16:43, 54.81s/it]Epoch  16 | Time    54 | Train Loss 0.1698 | Test Loss 0.151 | Test Error 4.18
+ 17%|█▋        | 17/100 [15:35<1:15:58, 54.93s/it]Epoch  17 | Time    55 | Train Loss 0.1255 | Test Loss 0.136 | Test Error 3.77
+ 18%|█▊        | 18/100 [16:30<1:15:06, 54.96s/it]Epoch  18 | Time    55 | Train Loss 0.0989 | Test Loss 0.124 | Test Error 3.41
+ 19%|█▉        | 19/100 [17:25<1:14:17, 55.03s/it]Epoch  19 | Time    55 | Train Loss 0.1257 | Test Loss 0.119 | Test Error 3.39
+ 20%|██        | 20/100 [18:20<1:13:03, 54.80s/it]Epoch  20 | Time    54 | Train Loss 0.1098 | Test Loss 0.115 | Test Error 3.23
+ 21%|██        | 21/100 [19:14<1:11:49, 54.55s/it]Epoch  21 | Time    53 | Train Loss 0.1001 | Test Loss 0.107 | Test Error 3.00
+ 22%|██▏       | 22/100 [20:08<1:10:48, 54.46s/it]Epoch  22 | Time    54 | Train Loss 0.1161 | Test Loss 0.103 | Test Error 2.83
+ 23%|██▎       | 23/100 [21:02<1:09:42, 54.32s/it]Epoch  23 | Time    53 | Train Loss 0.0877 | Test Loss 0.101 | Test Error 2.89
+ 24%|██▍       | 24/100 [21:56<1:08:41, 54.22s/it]Epoch  24 | Time    53 | Train Loss 0.0687 | Test Loss 0.097 | Test Error 2.91
