@@ -1,0 +1,4 @@
+{'dataset': 'mnist', 'model': 'dense', 'calibration': False, 'epochs': 100, 'learning_rate': 0.001, 'batch_size': 100, 'test_bs': 200, 'nf': 32, 'momentum': 0.9, 'decay': 0.0001, 'layers': 40, 'widen_factor': 2, 'droprate': 0.3, 'save': './snapshots/baseline', 'load': '', 'test': False, 'ngpu': 1, 'prefetch': 16, 'start_epoch': 40, 'sample_number': 1000, 'select': 1, 'sample_from': 10000, 'loss_weight': 0.1}
+Beginning Training
+
+  0%|          | 0/100 [00:00<?, ?it/s]

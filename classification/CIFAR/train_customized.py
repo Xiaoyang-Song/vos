@@ -40,8 +40,9 @@ parser.add_argument('--epochs', '-e', type=int, default=100,
 parser.add_argument('--learning_rate', '-lr', type=float,
                     default=0.001, help='The initial learning rate.')
 parser.add_argument('--batch_size', '-b', type=int,
-                    default=128, help='Batch size.')
+                    default=100, help='Batch size.')
 parser.add_argument('--test_bs', type=int, default=200)
+parser.add_argument('--nf', type=int, default=32)
 parser.add_argument('--momentum', type=float, default=0.9, help='Momentum.')
 parser.add_argument('--decay', '-d', type=float,
                     default=0.0001, help='Weight decay (L2 penalty).')
@@ -60,8 +61,7 @@ parser.add_argument('--test', '-t', action='store_true',
                     help='Test only flag.')
 # Acceleration
 parser.add_argument('--ngpu', type=int, default=1, help='0 = CPU.')
-parser.add_argument('--prefetch', type=int, default=1,
-                    help='Pre-fetching threads.')
+parser.add_argument('--prefetch', type=int, default=1, help='Pre-fetching threads.')
 # energy reg
 parser.add_argument('--start_epoch', type=int, default=40)
 parser.add_argument('--sample_number', type=int, default=1000)
@@ -94,6 +94,26 @@ if args.dataset == 'cifar10':
     num_channels = 3
     num_features = 64
 
+elif args.dataset == 'imagenet10':
+    train_set, test_set = imagenet10_set_loader(256, 0)
+    total_size = len(train_set)
+    train_ratio = 0.8
+    val_ratio = 0.2
+    print('Training dataset size: ', total_size)
+    # Calculate sizes for each split
+    train_size = int(total_size * train_ratio)
+    val_size = int(total_size * val_ratio)
+    if train_size + val_size != total_size:
+        val_size = val_size + 1 # This is specifically for imagenet100
+
+    # Perform the split
+    train_data, validation_data = torch.utils.data.random_split(train_set, [train_size, val_size])
+    print("Dataset size: ", len(train_data), len(validation_data), len(test_set))
+    test_data = validation_data + test_set
+    num_classes = 10
+    num_channels = 3
+    num_features = args.nf
+
 elif args.dataset == 'mnist':
     transform = transforms.Compose([ transforms.Resize((32, 32)), 
                                     transforms.Grayscale(num_output_channels=3),
@@ -102,7 +122,7 @@ elif args.dataset == 'mnist':
     test_data = torchvision.datasets.MNIST("./Datasets", download=True, train=False, transform=transform)
     num_classes = 10
     num_channels = 3
-    num_features = 32
+    num_features = args.nf
 
 elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
     data = DSET(args.dataset, True, 128, 128, [0, 1, 2, 3, 4, 5, 6, 7], [8, 9])
@@ -129,10 +149,8 @@ if args.calibration:
     train_data, val_data = validation_split(train_data, val_share=0.2)
     calib_indicator = '_calib'
 
-train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size, shuffle=True,
-    num_workers=args.prefetch, pin_memory=True)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False,
-    num_workers=args.prefetch, pin_memory=True)
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size, shuffle=True, num_workers=args.prefetch, pin_memory=True)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False, num_workers=args.prefetch, pin_memory=True)
 
 # Create model
 if args.model == 'allconv':
@@ -140,8 +158,7 @@ if args.model == 'allconv':
 elif args.model == 'dense':
     net = DenseNet3GP(100, num_classes, growth_rate=12, reduction=0.5, bottleneck=True, dropRate=0.0, num_channels= num_channels, feature_size=num_features)
 else:
-    net = WideResNet(args.layers, num_classes,
-                     args.widen_factor, dropRate=args.droprate)
+    net = WideResNet(args.layers, num_classes, args.widen_factor, dropRate=args.droprate)
 
 
 start_epoch = 0

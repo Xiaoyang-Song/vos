@@ -404,6 +404,8 @@ else:
     # print('\n\niSUN Detection')
     # get_and_print_results(ood_loader)
 
+    
+
     # # /////////////// Mean Results ///////////////
 
     # print('\n\nMean Test Results!!!!!')

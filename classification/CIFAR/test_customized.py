@@ -45,6 +45,7 @@ parser.add_argument('--method_name', '-m', type=str,
 # Loading details
 parser.add_argument('--layers', default=40, type=int,
                     help='total number of layers')
+parser.add_argument('--nf', type=int, default=32)
 parser.add_argument('--widen-factor', default=2, type=int, help='widen factor')
 parser.add_argument('--droprate', default=0.3, type=float,
                     help='dropout probability')
@@ -93,6 +94,26 @@ elif args.dataset == 'mnist':
     num_channels = 3
     num_features = 32
 
+elif args.dataset == 'imagenet10':
+    train_set, test_set = imagenet10_set_loader(256, 0)
+    total_size = len(train_set)
+    train_ratio = 0.8
+    val_ratio = 0.2
+    print('Training dataset size: ', total_size)
+    # Calculate sizes for each split
+    train_size = int(total_size * train_ratio)
+    val_size = int(total_size * val_ratio)
+    if train_size + val_size != total_size:
+        val_size = val_size + 1 # This is specifically for imagenet100
+
+    # Perform the split
+    train_data, validation_data = torch.utils.data.random_split(train_set, [train_size, val_size])
+    print("Dataset size: ", len(train_data), len(validation_data), len(test_set))
+    test_data = validation_data + test_set
+    num_classes = 10
+    num_channels = 3
+    num_features = args.nf
+
 elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
     data = DSET(args.dataset, True, 128, 128, [0, 1, 2, 3, 4, 5, 6, 7], [8, 9])
     train_data, test_data = data.ind_train, data.ind_val
@@ -112,8 +133,7 @@ else:
     assert False
 
 
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False,
-                                          num_workers=args.prefetch, pin_memory=True)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False, num_workers=args.prefetch, pin_memory=True)
 
 # Create model
 if args.model_name == 'res':
@@ -248,7 +268,27 @@ elif args.score == 'M':
         test_data = torchvision.datasets.MNIST("./Datasets", download=True, train=False, transform=transform)
         num_classes = 10
         num_channels = 3
-        num_features = 32
+        num_features = args.nf
+
+    elif args.dataset == 'imagenet10':
+        train_set, test_set = imagenet10_set_loader(256, 0)
+        total_size = len(train_set)
+        train_ratio = 0.8
+        val_ratio = 0.2
+        print('Training dataset size: ', total_size)
+        # Calculate sizes for each split
+        train_size = int(total_size * train_ratio)
+        val_size = int(total_size * val_ratio)
+        if train_size + val_size != total_size:
+            val_size = val_size + 1 # This is specifically for imagenet100
+
+        # Perform the split
+        train_data, validation_data = torch.utils.data.random_split(train_set, [train_size, val_size])
+        print("Dataset size: ", len(train_data), len(validation_data), len(test_set))
+        test_data = validation_data + test_set
+        num_classes = 10
+        num_channels = 3
+        num_features = args.nf
 
     elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
         data = DSET(args.dataset, True, 128, 128, [
@@ -290,8 +330,7 @@ elif args.score == 'M':
         net, test_loader, num_classes, sample_mean, precision, count-1, args.noise, num_batches, in_dist=True)
     print(in_score[-3:], in_score[-103:-100])
 else:
-    in_score, right_score, wrong_score = get_ood_scores(
-        test_loader, in_dist=True)
+    in_score, right_score, wrong_score = get_ood_scores(test_loader, in_dist=True)
 
 num_right = len(right_score)
 num_wrong = len(wrong_score)
@@ -385,6 +424,10 @@ if args.dataset == 'mnist':
     tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)
     ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1)
     get_and_print_results(ood_loader)
+
+elif args.dataset == 'imagenet10':
+    print('Testing on LSUN-C')
+    
 elif args.dataset == 'cifar10':
     print('Testing on SVHN')
     transform = transforms.Compose([transforms.ToTensor()])
