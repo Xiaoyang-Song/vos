@@ -27,6 +27,9 @@ Testing on ImageNet-c
 OOD Test size:  2000
 OOD Detection Accuracy: 99.75%
 AUROC: 99.92%
+
+energy-based method
+
 Namespace(test_bs=200, dataset='mnist', num_to_avg=10, validate=False, use_xent=False, method_name='mnist-32', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=1, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=True)
 2000 8000
 Model checkpoint loaded successfully.

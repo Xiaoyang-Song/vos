@@ -38,6 +38,9 @@ Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
 OOD Test size:  1600
 OOD Detection Accuracy: 0.00%
 AUROC: 9.23%
+
+energy-based method
+
 Namespace(test_bs=200, dataset='imagenet10', num_to_avg=10, validate=False, use_xent=False, method_name='imagenet10-32-0-o1', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=16, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=True)
 Total dataset size:  13000
 Dataset size:  10400 2600 500
@@ -63,3 +66,17 @@ OOD Detection Accuracy: 0.00%
 AUROC: 8.06%
 ######################################
 Testing on Places365
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 9.24%
+######################################
+Testing on DTD Texture
+OOD Test size:  1600
+OOD Detection Accuracy: 0.25%
+AUROC: 9.38%
+######################################
+Testing on SVHN
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 1.13%

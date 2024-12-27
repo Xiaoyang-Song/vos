@@ -195,7 +195,7 @@ else:
                 start_epoch = i + 1
                 break
         if start_epoch == 0:
-            assert False, "could not resume "+model_name
+            assert False, "could not resume " + model_name
 
 net.eval()
 
