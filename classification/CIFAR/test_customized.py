@@ -64,6 +64,8 @@ parser.add_argument('--T', default=1., type=float,
                     help='temperature: energy|Odin')
 parser.add_argument('--noise', type=float, default=0, help='noise for Odin')
 parser.add_argument('--model_name', default='res', type=str)
+# Customized
+parser.add_argument('--test_energy_baseline', action='store_true', help='Test energy baseline or not')
 
 args = parser.parse_args()
 print(args)
@@ -136,12 +138,15 @@ else:
 
 TPR = 0.95
 # Imagenet10
-if args.dataset == 'imageent10':
+if args.dataset == 'imagenet10':
     val_size = 1500
-    ood_test_size = ind_test_size = 1600
+    ood_test_size = 1600
+    ind_test_size = 1600
 elif args.dataset == 'mnist':
     # MNIST
-    val_size = ood_test_size = ind_test_size = 2000
+    val_size = 2000
+    ood_test_size = 2000
+    ind_test_size = 2000
 
 val_data = torch.utils.data.Subset(test_data, range(val_size))
 test_data = torch.utils.data.Subset(test_data, range(val_size, len(test_data)))
@@ -159,30 +164,39 @@ else:
     print("Model checkpoint loaded successfully.")
 start_epoch = 0
 
-# Restore model
-if args.load != '':
-    for i in range(1000 - 1, -1, -1):
-        if 'pretrained' in args.method_name:
-            subdir = 'pretrained'
-        elif 'oe_tune' in args.method_name:
-            subdir = 'oe_tune'
-        elif 'energy_ft' in args.method_name:
-            subdir = 'energy_ft'
-        elif 'baseline' in args.method_name:
-            subdir = 'baseline'
-        else:
-            subdir = 'oe_scratch'
+# ENERGY
+if args.test_energy_baseline:
+    experiment = args.method_name
+    pre_trained_net = f"/scratch/sunwbgt_root/sunwbgt98/xysong/GP-ImageNet/ckpt/{experiment}/densenet_{args.dataset}.pth"
+    net.load_state_dict(torch.load(pre_trained_net))
+    
+#VOS
+else:
+    # Restore model
+    if args.load != '':
+        for i in range(1000 - 1, -1, -1):
+            if 'pretrained' in args.method_name:
+                subdir = 'pretrained'
+            elif 'oe_tune' in args.method_name:
+                subdir = 'oe_tune'
+            elif 'energy_ft' in args.method_name:
+                subdir = 'energy_ft'
+            elif 'baseline' in args.method_name:
+                subdir = 'baseline'
+            else:
+                subdir = 'oe_scratch'
 
-        model_name = os.path.join(os.path.join(
-            args.load, subdir), args.method_name + '_epoch_' + str(i) + '.pt')
-        # model_name = os.path.join(os.path.join(args.load, subdir), args.method_name + '.pt')
-        if os.path.isfile(model_name):
-            net.load_state_dict(torch.load(model_name))
-            print('Model restored! Epoch:', i)
-            start_epoch = i + 1
-            break
-    if start_epoch == 0:
-        assert False, "could not resume "+model_name
+            model_name = os.path.join(os.path.join(
+                args.load, subdir), args.method_name + '_epoch_' + str(i) + '.pt')
+            # model_name = os.path.join(os.path.join(args.load, subdir), args.method_name + '.pt')
+            if os.path.isfile(model_name):
+                net.load_state_dict(torch.load(model_name))
+                print('Model restored! Epoch:', i)
+                start_epoch = i + 1
+                break
+        if start_epoch == 0:
+            assert False, "could not resume "+model_name
+
 
 net.eval()
 

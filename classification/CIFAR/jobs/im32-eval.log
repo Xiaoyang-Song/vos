@@ -1,7 +1,26 @@
-Namespace(test_bs=200, dataset='imagenet10', num_to_avg=10, validate=False, use_xent=False, method_name='imagenet10_dense_baseline_dense_0.1_1000_40_1_10000', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=16, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense')
+Namespace(test_bs=200, dataset='imagenet10', num_to_avg=10, validate=False, use_xent=False, method_name='imagenet10_dense_baseline_dense_0.1_1000_40_1_10000', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=16, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=False)
 Total dataset size:  13000
 Dataset size:  10400 2600 500
-2600 500
+1500 1600
 Model checkpoint loaded successfully.
 Model restored! Epoch: 99
-InD Val size:  2600
+InD Val size:  1500
+InD Testing size:  100
+Test In-Distribution Accuracy: 96.00%
+######################################
+Testing on LSUN-C
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 8.60%
+######################################
+Testing on LSUN-R
+OOD Test size:  1600
+OOD Detection Accuracy: 0.00%
+AUROC: 15.07%
+######################################
+Testing on iSUN
+OOD Test size:  1600
+OOD Detection Accuracy: 0.12%
+AUROC: 16.80%
+######################################
+Testing on Places365
