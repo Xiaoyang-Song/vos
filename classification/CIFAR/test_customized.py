@@ -17,6 +17,7 @@ from skimage.filters import gaussian as gblur
 from PIL import Image as PILImage
 from models.densenet_GP import DenseNet3GP
 from dataset import *
+from sklearn.metrics import roc_auc_score
 
 # go through rigamaroo to do ...utils.display_results import show_performance
 if __package__ is None:
@@ -99,7 +100,7 @@ elif args.dataset == 'imagenet10':
     total_size = len(train_set)
     train_ratio = 0.8
     val_ratio = 0.2
-    print('Training dataset size: ', total_size)
+    print('Total dataset size: ', total_size)
     # Calculate sizes for each split
     train_size = int(total_size * train_ratio)
     val_size = int(total_size * val_ratio)
@@ -133,7 +134,21 @@ else:
     assert False
 
 
+TPR = 0.95
+# Imagenet10
+if args.dataset == 'imageent10':
+    val_size = 1500
+    ood_test_size = ind_test_size = 1600
+elif args.dataset == 'mnist':
+    # MNIST
+    val_size = ood_test_size = ind_test_size = 2000
+
+val_data = torch.utils.data.Subset(test_data, range(val_size))
+test_data = torch.utils.data.Subset(test_data, range(val_size, len(test_data)))
+print(len(val_data), len(test_data))
+val_loader = torch.utils.data.DataLoader(val_data, batch_size=args.test_bs, shuffle=False, num_workers=args.prefetch, pin_memory=True)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.test_bs, shuffle=False, num_workers=args.prefetch, pin_memory=True)
+
 
 # Create model
 if args.model_name == 'res':
@@ -141,6 +156,7 @@ if args.model_name == 'res':
                      args.widen_factor, dropRate=args.droprate)
 else:
     net = DenseNet3GP(100, num_classes, growth_rate=12, reduction=0.5, bottleneck=True, dropRate=0.0, num_channels= num_channels, feature_size=num_features)
+    print("Model checkpoint loaded successfully.")
 start_epoch = 0
 
 # Restore model
@@ -196,8 +212,8 @@ def get_ood_scores(loader, in_dist=False):
 
     with torch.no_grad():
         for batch_idx, (data, target) in enumerate(loader):
-            if batch_idx >= ood_num_examples // args.test_bs and in_dist is False:
-                break
+            # if batch_idx >= ood_num_examples // args.test_bs and in_dist is False:
+            #     break
 
             data = data.cuda()
 
@@ -233,172 +249,23 @@ def get_ood_scores(loader, in_dist=False):
     if in_dist:
         return concat(_score).copy(), concat(_right_score).copy(), concat(_wrong_score).copy()
     else:
-        return concat(_score)[:ood_num_examples].copy()
+        return concat(_score).copy()
 
 
-if args.score == 'Odin':
-    # separated because no grad is not applied
-    in_score, right_score, wrong_score = lib.get_ood_scores_odin(
-        test_loader, net, args.test_bs, ood_num_examples, args.T, args.noise, in_dist=True)
-elif args.score == 'M':
-    from torch.autograd import Variable
-    _, right_score, wrong_score = get_ood_scores(test_loader, in_dist=True)
 
-    if args.dataset == 'cifar10':
-        # mean and standard deviation of channels of CIFAR-10 images
-        mean = [x / 255 for x in [125.3, 123.0, 113.9]]
-        std = [x / 255 for x in [63.0, 62.1, 66.7]]
-        train_transform = trn.Compose([trn.RandomHorizontalFlip(), trn.RandomCrop(32, padding=4),
-                                       trn.ToTensor(), trn.Normalize(mean, std)])
-        test_transform = trn.Compose(
-            [trn.ToTensor(), trn.Normalize(mean, std)])
-        train_data = dset.CIFAR10('./Dataset/CIFAR-10',
-                                  train=True, transform=train_transform, download=True)
-        test_data = dset.CIFAR10('./Dataset/CIFAR-10',
-                                 train=False, transform=test_transform, download=True)
-        num_classes = 10
-        num_channels = 3
-        num_features = 64
+# ENERGY: VOS uses this score function
+val_in_scores, _, _ = get_ood_scores(val_loader, in_dist=True)
+print("InD Val size: ", len(val_in_scores))
+threshold = np.quantile(val_in_scores, 1 - TPR)  # Threshold at 5% FPR
+# Test on InD
+test_in_scores, test_right_scores, test_wrong_scores = get_ood_scores(test_loader, in_dist=True)
+test_in_scores = test_in_scores[val_size:val_size + ind_test_size]
+print("InD Testing size: ", len(test_in_scores))
+test_in_correct = test_in_scores >= threshold
+test_in_accuracy = np.mean(test_in_correct)
+print(f"Test In-Distribution Accuracy: {test_in_accuracy * 100:.2f}%")
 
-    elif args.dataset == 'mnist':
-        transform = transforms.Compose([ transforms.Resize((32, 32)), 
-                                        transforms.Grayscale(num_output_channels=3),
-                                        transforms.ToTensor()])
-        train_data = torchvision.datasets.MNIST("./Datasets", download=True, transform=transform)
-        test_data = torchvision.datasets.MNIST("./Datasets", download=True, train=False, transform=transform)
-        num_classes = 10
-        num_channels = 3
-        num_features = args.nf
-
-    elif args.dataset == 'imagenet10':
-        train_set, test_set = imagenet10_set_loader(256, 0)
-        total_size = len(train_set)
-        train_ratio = 0.8
-        val_ratio = 0.2
-        print('Training dataset size: ', total_size)
-        # Calculate sizes for each split
-        train_size = int(total_size * train_ratio)
-        val_size = int(total_size * val_ratio)
-        if train_size + val_size != total_size:
-            val_size = val_size + 1 # This is specifically for imagenet100
-
-        # Perform the split
-        train_data, validation_data = torch.utils.data.random_split(train_set, [train_size, val_size])
-        print("Dataset size: ", len(train_data), len(validation_data), len(test_set))
-        test_data = validation_data + test_set
-        num_classes = 10
-        num_channels = 3
-        num_features = args.nf
-
-    elif args.dataset == 'SVHN' or args.dataset == 'FashionMNIST':
-        data = DSET(args.dataset, True, 128, 128, [
-                    0, 1, 2, 3, 4, 5, 6, 7], [8, 9])
-        train_data, test_data = data.ind_train, data.ind_val
-        num_classes = 8
-
-        if args.dataset == 'SVHN':
-            num_channels = 3
-        else:
-            num_channels = 1
-
-    elif args.dataset == 'MNIST':
-        data = DSET(args.dataset, True, 128, 128, [2, 3, 6, 8, 9], [1, 7])
-        train_data, test_data = data.ind_train, data.ind_val
-        num_channels = 1
-    else:
-        assert False
-
-    train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.test_bs, shuffle=False,
-                                               num_workers=args.prefetch, pin_memory=True)
-    num_batches = ood_num_examples // args.test_bs
-
-    temp_x = torch.rand(2, 3, 32, 32)
-    temp_x = Variable(temp_x)
-    temp_x = temp_x.cuda()
-    temp_list = net.feature_list(temp_x)[1]
-    num_output = len(temp_list)
-    feature_list = np.empty(num_output)
-    count = 0
-    for out in temp_list:
-        feature_list[count] = out.size(1)
-        count += 1
-
-    print('get sample mean and covariance', count)
-    sample_mean, precision = lib.sample_estimator(
-        net, num_classes, feature_list, train_loader)
-    in_score = lib.get_Mahalanobis_score(
-        net, test_loader, num_classes, sample_mean, precision, count-1, args.noise, num_batches, in_dist=True)
-    print(in_score[-3:], in_score[-103:-100])
-else:
-    in_score, right_score, wrong_score = get_ood_scores(test_loader, in_dist=True)
-
-num_right = len(right_score)
-num_wrong = len(wrong_score)
-print('Error Rate {:.2f}'.format(100 * num_wrong / (num_wrong + num_right)))
-
-# /////////////// End Detection Prelims ///////////////
-
-# print('\nUsing CIFAR-10 as typical data') if num_classes == 10 else print(
-#     '\nUsing CIFAR-100 as typical data')
-
-# /////////////// Error Detection ///////////////
-
-print('\n\nError Detection')
-show_performance(wrong_score, right_score, method_name=args.method_name)
-
-# /////////////// OOD Detection ///////////////
-auroc_list, aupr_list, fpr_list_95, fpr_list_99 = [], [], [], []
-
-
-def get_and_print_results(ood_loader, num_to_avg=args.num_to_avg):
-
-    aurocs, auprs, fprs = [], [], []
-
-    for _ in range(num_to_avg):
-        if args.score == 'Odin':
-            out_score = lib.get_ood_scores_odin(
-                ood_loader, net, args.test_bs, ood_num_examples, args.T, args.noise)
-        elif args.score == 'M':
-            out_score = lib.get_Mahalanobis_score(
-                net, ood_loader, num_classes, sample_mean, precision, count-1, args.noise, num_batches)
-        else:
-            out_score = get_ood_scores(ood_loader)
-        if args.out_as_pos:  # OE's defines out samples as positive
-            measures = get_measures(out_score, in_score)
-        else:
-            measures = get_measures(-in_score, -out_score)
-        aurocs.append(measures[0])
-        auprs.append(measures[1])
-        fprs.append(measures[2])
-    print(in_score[:3], out_score[:3])
-    auroc = np.mean(aurocs)
-    aupr = np.mean(auprs)
-    fprs = np.array(fprs)
-    # print(fprs)
-    fpr = np.mean(fprs, axis=0)
-    # print(fpr)
-    auroc_list.append(auroc)
-    aupr_list.append(aupr)
-    fpr_list_95.append(fpr[0])
-    fpr_list_99.append(fpr[1])
-
-    if num_to_avg >= 5:
-        print_measures_with_std(aurocs, auprs, fprs, args.method_name)
-    else:
-        print_measures(auroc, aupr, fpr, args.method_name)
-
-
-# /////////////// Textures ///////////////
-# ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/dtd/images",
-#                             transform=trn.Compose([trn.Resize(32), trn.CenterCrop(32),
-#                                                    trn.ToTensor(), trn.Normalize(mean, std)]))
-# ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-#                                          num_workers=4, pin_memory=True)
-# print('\n\nTexture Detection')
-# get_and_print_results(ood_loader)
-
-# /////////////// SVHN /////////////// # cropped and no sampling of the test set
-
+# TESTING OOD data
 if args.dataset == 'mnist':
     print('######################################')
     print('Testing on FashionMNIST') 
@@ -406,247 +273,187 @@ if args.dataset == 'mnist':
                                 transforms.Grayscale(num_output_channels=3),
                                 transforms.ToTensor()])
     tset = torchvision.datasets.FashionMNIST("./Datasets", download=True, train=True, transform=transform)
-    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1, pin_memory=True)
-    print('\n\nFashionMNIST Detection')
-    get_and_print_results(ood_loader)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=False, num_workers=1, pin_memory=True)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
 
+    print('######################################')
     print('Testing on CIFAR10')
     normalizer = transforms.Normalize(mean=[x/255.0 for x in [125.3, 123.0, 113.9]],
                                     std=[x/255.0 for x in [63.0, 62.1, 66.7]])
     transform = transforms.Compose([transforms.ToTensor(), normalizer])
     tset = datasets.CIFAR10('./Datasets/CIFAR-10', train=True, download=True, transform=transform)
-    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True,
-                                             num_workers=1, pin_memory=True)
-    get_and_print_results(ood_loader)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=False, num_workers=1, pin_memory=True)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
 
+    print('######################################')
     print('Testing on SVHN')
     transform = transforms.Compose([transforms.ToTensor()])
-    tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)
-    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1)
-    get_and_print_results(ood_loader)
+    tset = datasets.SVHN('./Datasets/SVHN', split='test', download=True, transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+    print('######################################')
+    print('Testing on ImageNet-c') 
+    transform = transforms.Compose([transforms.RandomCrop(32),
+                                    transforms.ToTensor(),
+                                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    
+    tset = datasets.ImageFolder(os.path.join('../../../GP-ImageNet/data/Imagenet'), transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
 
 elif args.dataset == 'imagenet10':
+    print('######################################')
     print('Testing on LSUN-C')
-    
-elif args.dataset == 'cifar10':
+    mean = [x / 255 for x in [125.3, 123.0, 113.9]]
+    std = [x / 255 for x in [63.0, 62.1, 66.7]]
+    data = torchvision.datasets.ImageFolder(root="../../../GP-ImageNet/data/LSUN/",
+                                transform=transforms.Compose([transforms.Resize((32, 32)), 
+                                                            transforms.CenterCrop(32), 
+                                                            transforms.ToTensor(),
+                                                            transforms.Normalize(mean, std)]))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+
+    print('######################################')
+    print('Testing on LSUN-R')
+    mean = [x / 255 for x in [125.3, 123.0, 113.9]]
+    std = [x / 255 for x in [63.0, 62.1, 66.7]]
+    data = torchvision.datasets.ImageFolder(root="../../../GP-ImageNet/data/LSUN_resize/",
+                                transform=transforms.Compose([transforms.Resize((32, 32)), 
+                                                            transforms.CenterCrop(32), 
+                                                            transforms.ToTensor(),
+                                                            transforms.Normalize(mean, std)]))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+    print('######################################')
+    print('Testing on iSUN')
+    mean = [x / 255 for x in [125.3, 123.0, 113.9]]
+    std = [x / 255 for x in [63.0, 62.1, 66.7]]
+    data = torchvision.datasets.ImageFolder(root="../../../GP-ImageNet/data/iSUN/",
+                                transform=transforms.Compose([transforms.Resize((32, 32)), 
+                                                            transforms.CenterCrop(32), 
+                                                            transforms.ToTensor(),
+                                                            transforms.Normalize(mean, std)]))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+    print('######################################')
+    print('Testing on Places365')
+    mean = [x / 255 for x in [125.3, 123.0, 113.9]]
+    std = [x / 255 for x in [63.0, 62.1, 66.7]]
+    data = datasets.Places365(root="../../../GP-ImageNet/data/", split='val', small=True, download=False, 
+                            transform=transforms.Compose([transforms.Resize((32, 32)), 
+                                                            transforms.CenterCrop(32), 
+                                                            transforms.ToTensor(),
+                                                            transforms.Normalize(mean, std)]))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+    print('######################################')
+    print('Testing on DTD Texture')
+    data = torchvision.datasets.ImageFolder(root="../../../GP-ImageNet/data/dtd/images/",
+                                transform=transforms.Compose([transforms.Resize((32, 32)), transforms.CenterCrop(32), 
+                                                                transforms.ToTensor(), 
+                                                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),]))
+    ood_loader = torch.utils.data.DataLoader(data, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")
+
+    print('######################################')
     print('Testing on SVHN')
     transform = transforms.Compose([transforms.ToTensor()])
-    tset = datasets.SVHN('./Datasets/SVHN', split='train', download=True, transform=transform)
-    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=True, num_workers=1)
-    get_and_print_results(ood_loader)
-else:
-    print(data.name)
-    ood_data = data.ood_val
-    ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-                                             num_workers=1, pin_memory=True)
-    print(f'\n\n{data.name} Detection')
-    get_and_print_results(ood_loader)
-
-    # /////////////// Places365 ///////////////
-    # ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/places365/",
-    #                             transform=trn.Compose([trn.Resize(32), trn.CenterCrop(32),
-    #                                                    trn.ToTensor(), trn.Normalize(mean, std)]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=2, pin_memory=True)
-    # print('\n\nPlaces365 Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// LSUN-C ///////////////
-    # ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/LSUN_C",
-    #                             transform=trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=1, pin_memory=True)
-    # print('\n\nLSUN_C Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// LSUN-R ///////////////
-    # ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/LSUN_resize",
-    #                             transform=trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=1, pin_memory=True)
-    # print('\n\nLSUN_Resize Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// iSUN ///////////////
-    # ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/iSUN",
-    #                             transform=trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=1, pin_memory=True)
-    # print('\n\niSUN Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Mean Results ///////////////
-
-    # print('\n\nMean Test Results!!!!!')
-    # print_measures(np.mean(auroc_list), np.mean(aupr_list),
-    #                np.mean(fpr_list), method_name=args.method_name)
-
-    # # /////////////// CIFAR-100 ///////////////
-    # ood_data = dset.CIFAR100('/nobackup-slow/dataset/cifarpy', train=False,
-    #                          transform=trn.Compose([trn.ToTensor(), trn.Normalize(mean, std)]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=1, pin_memory=True)
-    # print('\n\nCIFAR-100 Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// celeba ///////////////
-    # ood_data = dset.ImageFolder(root="/nobackup-slow/dataset/celeba",
-    #                             transform=trn.Compose([trn.Resize(32), trn.CenterCrop(32),
-    #                                                    trn.ToTensor(), trn.Normalize((.5, .5, .5), (.5, .5, .5))]))
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=1, pin_memory=True)
-    # print('\n\nceleba Detection')
-    # get_and_print_results(ood_loader)
-
-    # /////////////// OOD Detection of Validation Distributions ///////////////
-
-    # if args.validate is False:
-    #     exit()
-
-    # auroc_list, aupr_list, fpr_list = [], [], []
-
-    # # /////////////// Uniform Noise ///////////////
-
-    # dummy_targets = torch.ones(ood_num_examples * args.num_to_avg)
-    # ood_data = torch.from_numpy(
-    #     np.random.uniform(size=(ood_num_examples * args.num_to_avg, 3, 32, 32),
-    #                       low=-1.0, high=1.0).astype(np.float32))
-    # ood_data = torch.utils.data.TensorDataset(ood_data, dummy_targets)
-    # ood_loader = torch.utils.data.DataLoader(
-    #     ood_data, batch_size=args.test_bs, shuffle=True)
-
-    # print('\n\nUniform[-1,1] Noise Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Arithmetic Mean of Images ///////////////
-
-    # if 'cifar10_' in args.method_name:
-    #     ood_data = dset.CIFAR100(
-    #         '/nobackup-slow/dataset/cifarpy', train=False, transform=test_transform)
-    # else:
-    #     ood_data = dset.CIFAR10('/nobackup-slow/dataset/cifarpy',
-    #                             train=False, transform=test_transform)
-
-    # class AvgOfPair(torch.utils.data.Dataset):
-    #     def __init__(self, dataset):
-    #         self.dataset = dataset
-    #         self.shuffle_indices = np.arange(len(dataset))
-    #         np.random.shuffle(self.shuffle_indices)
-
-    #     def __getitem__(self, i):
-    #         random_idx = np.random.choice(len(self.dataset))
-    #         while random_idx == i:
-    #             random_idx = np.random.choice(len(self.dataset))
-
-    #         return self.dataset[i][0] / 2. + self.dataset[random_idx][0] / 2., 0
-
-    #     def __len__(self):
-    #         return len(self.dataset)
-
-    # ood_loader = torch.utils.data.DataLoader(AvgOfPair(ood_data),
-    #                                          batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=args.prefetch, pin_memory=True)
-
-    # print('\n\nArithmetic Mean of Random Image Pair Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Geometric Mean of Images ///////////////
-
-    # if 'cifar10_' in args.method_name:
-    #     ood_data = dset.CIFAR100(
-    #         '/nobackup-slow/dataset/cifarpy', train=False, transform=trn.ToTensor())
-    # else:
-    #     ood_data = dset.CIFAR10('/nobackup-slow/dataset/cifarpy',
-    #                             train=False, transform=trn.ToTensor())
-
-    # class GeomMeanOfPair(torch.utils.data.Dataset):
-    #     def __init__(self, dataset):
-    #         self.dataset = dataset
-    #         self.shuffle_indices = np.arange(len(dataset))
-    #         np.random.shuffle(self.shuffle_indices)
-
-    #     def __getitem__(self, i):
-    #         random_idx = np.random.choice(len(self.dataset))
-    #         while random_idx == i:
-    #             random_idx = np.random.choice(len(self.dataset))
-
-    #         return trn.Normalize(mean, std)(torch.sqrt(self.dataset[i][0] * self.dataset[random_idx][0])), 0
-
-    #     def __len__(self):
-    #         return len(self.dataset)
-
-    # ood_loader = torch.utils.data.DataLoader(
-    #     GeomMeanOfPair(ood_data), batch_size=args.test_bs, shuffle=True,
-    #     num_workers=args.prefetch, pin_memory=True)
-
-    # print('\n\nGeometric Mean of Random Image Pair Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Jigsaw Images ///////////////
-
-    # ood_loader = torch.utils.data.DataLoader(ood_data, batch_size=args.test_bs, shuffle=True,
-    #                                          num_workers=args.prefetch, pin_memory=True)
-
-    # def jigsaw(x): return torch.cat((
-    #     torch.cat((torch.cat((x[:, 8:16, :16], x[:, :8, :16]), 1),
-    #                x[:, 16:, :16]), 2),
-    #     torch.cat((x[:, 16:, 16:],
-    #                torch.cat((x[:, :16, 24:], x[:, :16, 16:24]), 2)), 2),
-    # ), 1)
-
-    # ood_loader.dataset.transform = trn.Compose(
-    #     [trn.ToTensor(), jigsaw, trn.Normalize(mean, std)])
-
-    # print('\n\nJigsawed Images Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Speckled Images ///////////////
-
-    # def speckle(x): return torch.clamp(x + x * torch.randn_like(x), 0, 1)
-
-    # ood_loader.dataset.transform = trn.Compose(
-    #     [trn.ToTensor(), speckle, trn.Normalize(mean, std)])
-
-    # print('\n\nSpeckle Noised Images Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Pixelated Images ///////////////
-
-    # def pixelate(x): return x.resize((int(32 * 0.2), int(32 * 0.2)),
-    #                                  PILImage.BOX).resize((32, 32), PILImage.BOX)
-
-    # ood_loader.dataset.transform = trn.Compose(
-    #     [pixelate, trn.ToTensor(), trn.Normalize(mean, std)])
-
-    # print('\n\nPixelate Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// RGB Ghosted/Shifted Images ///////////////
-
-    # def rgb_shift(x): return torch.cat((x[1:2].index_select(2, torch.LongTensor([i for i in range(32 - 1, -1, -1)])),
-    #                                     x[2:, :, :], x[0:1, :, :]), 0)
-
-    # ood_loader.dataset.transform = trn.Compose(
-    #     [trn.ToTensor(), rgb_shift, trn.Normalize(mean, std)])
-
-    # print('\n\nRGB Ghosted/Shifted Image Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Inverted Images ///////////////
-
-    # # not done on all channels to make image ood with higher probability
-
-    # def invert(x): return torch.cat(
-    #     (x[0:1, :, :], 1 - x[1:2, :, ], 1 - x[2:, :, :],), 0)
-
-    # ood_loader.dataset.transform = trn.Compose(
-    #     [trn.ToTensor(), invert, trn.Normalize(mean, std)])
-
-    # print('\n\nInverted Image Detection')
-    # get_and_print_results(ood_loader)
-
-    # # /////////////// Mean Results ///////////////
-
-    # print('\n\nMean Validation Results')
-    # print_measures(np.mean(auroc_list), np.mean(aupr_list),
-    #                np.mean(fpr_list), method_name=args.method_name)
+    tset = datasets.SVHN('./Datasets/SVHN', split='test', download=True, transform=transform)
+    ood_loader = torch.utils.data.DataLoader(tset, batch_size=args.test_bs, shuffle=False, num_workers=1)
+    ood_scores = get_ood_scores(ood_loader, in_dist=False)
+    ood_scores = ood_scores[val_size:val_size + ood_test_size]
+    print("OOD Test size: ", len(ood_scores))
+    ood_correct = ood_scores < threshold
+    ood_accuracy = np.mean(ood_correct)
+    print(f"OOD Detection Accuracy: {ood_accuracy * 100:.2f}%")
+    all_scores = np.concatenate([test_in_scores, ood_scores])
+    all_labels = np.concatenate([np.ones(len(test_in_scores)), np.zeros(len(ood_scores))])  # 1 for in-dist, 0 for OOD
+    auroc = roc_auc_score(all_labels, all_scores)  # Use negative scores if lower scores indicate OOD
+    print(f"AUROC: {auroc * 100:.2f}%")

@@ -25,3 +25,80 @@ Beginning Training
  22%|██▏       | 22/100 [20:08<1:10:48, 54.46s/it]Epoch  22 | Time    54 | Train Loss 0.1161 | Test Loss 0.103 | Test Error 2.83
  23%|██▎       | 23/100 [21:02<1:09:42, 54.32s/it]Epoch  23 | Time    53 | Train Loss 0.0877 | Test Loss 0.101 | Test Error 2.89
  24%|██▍       | 24/100 [21:56<1:08:41, 54.22s/it]Epoch  24 | Time    53 | Train Loss 0.0687 | Test Loss 0.097 | Test Error 2.91
+ 25%|██▌       | 25/100 [22:51<1:07:59, 54.39s/it]Epoch  25 | Time    54 | Train Loss 0.0916 | Test Loss 0.095 | Test Error 2.73
+ 26%|██▌       | 26/100 [23:45<1:07:04, 54.39s/it]Epoch  26 | Time    54 | Train Loss 0.0925 | Test Loss 0.089 | Test Error 2.51
+ 27%|██▋       | 27/100 [24:39<1:06:09, 54.38s/it]Epoch  27 | Time    54 | Train Loss 0.0607 | Test Loss 0.091 | Test Error 2.64
+ 28%|██▊       | 28/100 [25:34<1:05:26, 54.54s/it]Epoch  28 | Time    54 | Train Loss 0.0513 | Test Loss 0.087 | Test Error 2.58
+ 29%|██▉       | 29/100 [26:28<1:04:20, 54.37s/it]Epoch  29 | Time    53 | Train Loss 0.0755 | Test Loss 0.084 | Test Error 2.47
+ 30%|███       | 30/100 [27:22<1:03:16, 54.23s/it]Epoch  30 | Time    53 | Train Loss 0.0685 | Test Loss 0.083 | Test Error 2.38
+ 31%|███       | 31/100 [28:16<1:02:20, 54.20s/it]Epoch  31 | Time    54 | Train Loss 0.0645 | Test Loss 0.080 | Test Error 2.29
+ 32%|███▏      | 32/100 [29:12<1:01:49, 54.55s/it]Epoch  32 | Time    55 | Train Loss 0.0702 | Test Loss 0.079 | Test Error 2.32
+ 33%|███▎      | 33/100 [30:06<1:00:44, 54.40s/it]Epoch  33 | Time    54 | Train Loss 0.0722 | Test Loss 0.081 | Test Error 2.40
+ 34%|███▍      | 34/100 [31:00<59:46, 54.34s/it]  Epoch  34 | Time    54 | Train Loss 0.0624 | Test Loss 0.079 | Test Error 2.23
+ 35%|███▌      | 35/100 [31:54<58:50, 54.32s/it]Epoch  35 | Time    54 | Train Loss 0.0487 | Test Loss 0.076 | Test Error 2.29
+ 36%|███▌      | 36/100 [32:49<58:10, 54.53s/it]Epoch  36 | Time    55 | Train Loss 0.0472 | Test Loss 0.074 | Test Error 2.11
+ 37%|███▋      | 37/100 [33:44<57:15, 54.53s/it]Epoch  37 | Time    54 | Train Loss 0.0445 | Test Loss 0.073 | Test Error 2.13
+ 38%|███▊      | 38/100 [34:38<56:13, 54.41s/it]Epoch  38 | Time    54 | Train Loss 0.0570 | Test Loss 0.071 | Test Error 2.14
+ 39%|███▉      | 39/100 [35:32<55:20, 54.44s/it]Epoch  39 | Time    54 | Train Loss 0.0544 | Test Loss 0.070 | Test Error 2.09
+ 40%|████      | 40/100 [36:27<54:37, 54.62s/it]Epoch  40 | Time    55 | Train Loss 0.0328 | Test Loss 0.070 | Test Error 2.11
+ 41%|████      | 41/100 [37:38<58:31, 59.52s/it]Epoch  41 | Time    70 | Train Loss 0.0657 | Test Loss 0.070 | Test Error 2.14
+ 42%|████▏     | 42/100 [38:48<1:00:32, 62.62s/it]Epoch  42 | Time    69 | Train Loss 0.0826 | Test Loss 0.072 | Test Error 2.16
+ 43%|████▎     | 43/100 [39:59<1:01:45, 65.01s/it]Epoch  43 | Time    70 | Train Loss 0.1202 | Test Loss 0.073 | Test Error 2.27
+ 44%|████▍     | 44/100 [41:08<1:01:55, 66.35s/it]Epoch  44 | Time    69 | Train Loss 0.0795 | Test Loss 0.070 | Test Error 2.01
+ 45%|████▌     | 45/100 [42:18<1:01:36, 67.21s/it]Epoch  45 | Time    69 | Train Loss 0.0778 | Test Loss 0.068 | Test Error 1.99
+ 46%|████▌     | 46/100 [43:27<1:01:01, 67.80s/it]Epoch  46 | Time    69 | Train Loss 0.0803 | Test Loss 0.068 | Test Error 2.01
+ 47%|████▋     | 47/100 [44:36<1:00:17, 68.26s/it]Epoch  47 | Time    69 | Train Loss 0.0728 | Test Loss 0.067 | Test Error 2.01
+ 48%|████▊     | 48/100 [45:45<59:25, 68.57s/it]  Epoch  48 | Time    69 | Train Loss 0.0676 | Test Loss 0.066 | Test Error 1.96
+ 49%|████▉     | 49/100 [46:55<58:27, 68.77s/it]Epoch  49 | Time    69 | Train Loss 0.0652 | Test Loss 0.065 | Test Error 1.91
+ 50%|█████     | 50/100 [48:04<57:25, 68.91s/it]Epoch  50 | Time    69 | Train Loss 0.0596 | Test Loss 0.066 | Test Error 1.98
+ 51%|█████     | 51/100 [49:14<56:42, 69.44s/it]Epoch  51 | Time    70 | Train Loss 0.0606 | Test Loss 0.064 | Test Error 1.98
+ 52%|█████▏    | 52/100 [50:25<55:53, 69.86s/it]Epoch  52 | Time    70 | Train Loss 0.0593 | Test Loss 0.064 | Test Error 2.07
+ 53%|█████▎    | 53/100 [51:35<54:47, 69.95s/it]Epoch  53 | Time    70 | Train Loss 0.0605 | Test Loss 0.064 | Test Error 2.04
+ 54%|█████▍    | 54/100 [52:46<53:43, 70.08s/it]Epoch  54 | Time    70 | Train Loss 0.0568 | Test Loss 0.064 | Test Error 2.06
+ 55%|█████▌    | 55/100 [53:56<52:33, 70.07s/it]Epoch  55 | Time    70 | Train Loss 0.0608 | Test Loss 0.065 | Test Error 1.98
+ 56%|█████▌    | 56/100 [55:06<51:20, 70.02s/it]Epoch  56 | Time    69 | Train Loss 0.0612 | Test Loss 0.064 | Test Error 2.02
+ 57%|█████▋    | 57/100 [56:16<50:14, 70.11s/it]Epoch  57 | Time    70 | Train Loss 0.0712 | Test Loss 0.064 | Test Error 1.97
+ 58%|█████▊    | 58/100 [57:25<48:52, 69.83s/it]Epoch  58 | Time    69 | Train Loss 0.0698 | Test Loss 0.066 | Test Error 2.03
+ 59%|█████▉    | 59/100 [58:35<47:36, 69.67s/it]Epoch  59 | Time    69 | Train Loss 0.0616 | Test Loss 0.065 | Test Error 2.08
+ 60%|██████    | 60/100 [59:45<46:33, 69.84s/it]Epoch  60 | Time    70 | Train Loss 0.0702 | Test Loss 0.064 | Test Error 1.99
+ 61%|██████    | 61/100 [1:00:55<45:28, 69.96s/it]Epoch  61 | Time    70 | Train Loss 0.0570 | Test Loss 0.066 | Test Error 2.04
+ 62%|██████▏   | 62/100 [1:02:06<44:25, 70.14s/it]Epoch  62 | Time    70 | Train Loss 0.0607 | Test Loss 0.066 | Test Error 2.03
+ 63%|██████▎   | 63/100 [1:03:16<43:14, 70.12s/it]Epoch  63 | Time    70 | Train Loss 0.0622 | Test Loss 0.065 | Test Error 2.02
+ 64%|██████▍   | 64/100 [1:04:25<41:55, 69.89s/it]Epoch  64 | Time    69 | Train Loss 0.0629 | Test Loss 0.064 | Test Error 2.01
+ 65%|██████▌   | 65/100 [1:05:35<40:41, 69.76s/it]Epoch  65 | Time    69 | Train Loss 0.0764 | Test Loss 0.065 | Test Error 1.98
+ 66%|██████▌   | 66/100 [1:06:43<39:22, 69.48s/it]Epoch  66 | Time    68 | Train Loss 0.0849 | Test Loss 0.065 | Test Error 2.01
+ 67%|██████▋   | 67/100 [1:07:52<38:07, 69.31s/it]Epoch  67 | Time    68 | Train Loss 0.0580 | Test Loss 0.064 | Test Error 1.99
+ 68%|██████▊   | 68/100 [1:09:02<36:58, 69.32s/it]Epoch  68 | Time    69 | Train Loss 0.0596 | Test Loss 0.064 | Test Error 1.98
+ 69%|██████▉   | 69/100 [1:10:11<35:50, 69.38s/it]Epoch  69 | Time    69 | Train Loss 0.0590 | Test Loss 0.064 | Test Error 2.03
+ 70%|███████   | 70/100 [1:11:20<34:38, 69.30s/it]Epoch  70 | Time    69 | Train Loss 0.0770 | Test Loss 0.064 | Test Error 1.97
+ 71%|███████   | 71/100 [1:12:28<33:20, 68.98s/it]Epoch  71 | Time    68 | Train Loss 0.0733 | Test Loss 0.065 | Test Error 1.98
+ 72%|███████▏  | 72/100 [1:13:38<32:12, 69.03s/it]Epoch  72 | Time    69 | Train Loss 0.0723 | Test Loss 0.064 | Test Error 2.00
+ 73%|███████▎  | 73/100 [1:14:47<31:07, 69.16s/it]Epoch  73 | Time    69 | Train Loss 0.0744 | Test Loss 0.064 | Test Error 2.04
+ 74%|███████▍  | 74/100 [1:15:56<29:58, 69.17s/it]Epoch  74 | Time    69 | Train Loss 0.0496 | Test Loss 0.064 | Test Error 2.00
+ 75%|███████▌  | 75/100 [1:17:06<28:53, 69.33s/it]Epoch  75 | Time    69 | Train Loss 0.0765 | Test Loss 0.066 | Test Error 1.99
+ 76%|███████▌  | 76/100 [1:18:16<27:49, 69.55s/it]Epoch  76 | Time    70 | Train Loss 0.0803 | Test Loss 0.064 | Test Error 2.01
+ 77%|███████▋  | 77/100 [1:19:26<26:39, 69.55s/it]Epoch  77 | Time    69 | Train Loss 0.0577 | Test Loss 0.064 | Test Error 1.98
+ 78%|███████▊  | 78/100 [1:20:35<25:27, 69.45s/it]Epoch  78 | Time    69 | Train Loss 0.0571 | Test Loss 0.064 | Test Error 2.00
+ 79%|███████▉  | 79/100 [1:21:44<24:15, 69.32s/it]Epoch  79 | Time    69 | Train Loss 0.0674 | Test Loss 0.064 | Test Error 2.01
+ 80%|████████  | 80/100 [1:22:53<23:04, 69.20s/it]Epoch  80 | Time    68 | Train Loss 0.0687 | Test Loss 0.063 | Test Error 1.98
+ 81%|████████  | 81/100 [1:24:02<21:52, 69.08s/it]Epoch  81 | Time    68 | Train Loss 0.0626 | Test Loss 0.064 | Test Error 1.96
+ 82%|████████▏ | 82/100 [1:25:12<20:49, 69.43s/it]Epoch  82 | Time    70 | Train Loss 0.0697 | Test Loss 0.066 | Test Error 2.01
+ 83%|████████▎ | 83/100 [1:26:22<19:44, 69.70s/it]Epoch  83 | Time    70 | Train Loss 0.0600 | Test Loss 0.065 | Test Error 2.04
+ 84%|████████▍ | 84/100 [1:27:32<18:36, 69.78s/it]Epoch  84 | Time    69 | Train Loss 0.0607 | Test Loss 0.065 | Test Error 1.97
+ 85%|████████▌ | 85/100 [1:28:42<17:27, 69.83s/it]Epoch  85 | Time    69 | Train Loss 0.0585 | Test Loss 0.065 | Test Error 1.99
+ 86%|████████▌ | 86/100 [1:29:52<16:19, 69.94s/it]Epoch  86 | Time    70 | Train Loss 0.0687 | Test Loss 0.065 | Test Error 1.98
+ 87%|████████▋ | 87/100 [1:31:02<15:07, 69.81s/it]Epoch  87 | Time    69 | Train Loss 0.0838 | Test Loss 0.064 | Test Error 2.03
+ 88%|████████▊ | 88/100 [1:32:12<13:58, 69.90s/it]Epoch  88 | Time    70 | Train Loss 0.0626 | Test Loss 0.065 | Test Error 2.03
+ 89%|████████▉ | 89/100 [1:33:22<12:48, 69.88s/it]Epoch  89 | Time    69 | Train Loss 0.0757 | Test Loss 0.067 | Test Error 2.06
+ 90%|█████████ | 90/100 [1:34:32<11:40, 70.02s/it]Epoch  90 | Time    70 | Train Loss 0.0857 | Test Loss 0.066 | Test Error 1.98
+ 91%|█████████ | 91/100 [1:35:41<10:28, 69.81s/it]Epoch  91 | Time    69 | Train Loss 0.0702 | Test Loss 0.065 | Test Error 2.07
+ 92%|█████████▏| 92/100 [1:36:52<09:19, 69.91s/it]Epoch  92 | Time    70 | Train Loss 0.0722 | Test Loss 0.063 | Test Error 1.99
+ 93%|█████████▎| 93/100 [1:38:00<08:06, 69.48s/it]Epoch  93 | Time    68 | Train Loss 0.0733 | Test Loss 0.064 | Test Error 1.99
+ 94%|█████████▍| 94/100 [1:39:09<06:56, 69.40s/it]Epoch  94 | Time    69 | Train Loss 0.0660 | Test Loss 0.064 | Test Error 2.04
+ 95%|█████████▌| 95/100 [1:40:19<05:47, 69.43s/it]Epoch  95 | Time    69 | Train Loss 0.0669 | Test Loss 0.066 | Test Error 2.03
+ 96%|█████████▌| 96/100 [1:41:29<04:38, 69.59s/it]Epoch  96 | Time    69 | Train Loss 0.0754 | Test Loss 0.063 | Test Error 2.00
+ 97%|█████████▋| 97/100 [1:42:39<03:29, 69.67s/it]Epoch  97 | Time    69 | Train Loss 0.0644 | Test Loss 0.065 | Test Error 1.99
+ 98%|█████████▊| 98/100 [1:43:48<02:19, 69.71s/it]Epoch  98 | Time    69 | Train Loss 0.0638 | Test Loss 0.064 | Test Error 2.00
+ 99%|█████████▉| 99/100 [1:44:59<01:09, 69.87s/it]Epoch  99 | Time    70 | Train Loss 0.0742 | Test Loss 0.064 | Test Error 1.97
+100%|██████████| 100/100 [1:46:09<00:00, 69.96s/it]100%|██████████| 100/100 [1:46:09<00:00, 63.69s/it]
+Epoch 100 | Time    70 | Train Loss 0.0616 | Test Loss 0.064 | Test Error 2.02

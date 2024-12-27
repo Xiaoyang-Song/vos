@@ -1,0 +1,7 @@
+Namespace(test_bs=200, dataset='imagenet10', num_to_avg=10, validate=False, use_xent=False, method_name='imagenet10_dense_baseline_dense_0.1_1000_40_1_10000', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=16, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense')
+Total dataset size:  13000
+Dataset size:  10400 2600 500
+2600 500
+Model checkpoint loaded successfully.
+Model restored! Epoch: 99
+InD Val size:  2600
