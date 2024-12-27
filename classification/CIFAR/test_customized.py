@@ -169,7 +169,7 @@ if args.test_energy_baseline:
     experiment = args.method_name
     pre_trained_net = f"/scratch/sunwbgt_root/sunwbgt98/xysong/GP-ImageNet/ckpt/{experiment}/densenet_{args.dataset}.pth"
     net.load_state_dict(torch.load(pre_trained_net))
-    
+
 #VOS
 else:
     # Restore model
@@ -196,7 +196,6 @@ else:
                 break
         if start_epoch == 0:
             assert False, "could not resume "+model_name
-
 
 net.eval()
 

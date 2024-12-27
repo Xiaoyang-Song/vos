@@ -1,0 +1,57 @@
+Namespace(test_bs=200, dataset='mnist', num_to_avg=10, validate=False, use_xent=False, method_name='mnist_dense_baseline_dense_0.1_1000_40_1_10000', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=1, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=False)
+2000 8000
+Model checkpoint loaded successfully.
+Model restored! Epoch: 99
+InD Val size:  2000
+InD Testing size:  2000
+Test In-Distribution Accuracy: 92.95%
+######################################
+Testing on FashionMNIST
+OOD Test size:  2000
+OOD Detection Accuracy: 50.85%
+AUROC: 70.38%
+######################################
+Testing on CIFAR10
+Files already downloaded and verified
+OOD Test size:  2000
+OOD Detection Accuracy: 100.00%
+AUROC: 100.00%
+######################################
+Testing on SVHN
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+OOD Test size:  2000
+OOD Detection Accuracy: 98.55%
+AUROC: 99.63%
+######################################
+Testing on ImageNet-c
+OOD Test size:  2000
+OOD Detection Accuracy: 99.75%
+AUROC: 99.92%
+Namespace(test_bs=200, dataset='mnist', num_to_avg=10, validate=False, use_xent=False, method_name='mnist-32', layers=40, nf=32, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=1, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense', test_energy_baseline=True)
+2000 8000
+Model checkpoint loaded successfully.
+InD Val size:  2000
+InD Testing size:  2000
+Test In-Distribution Accuracy: 93.40%
+######################################
+Testing on FashionMNIST
+OOD Test size:  2000
+OOD Detection Accuracy: 61.10%
+AUROC: 80.79%
+######################################
+Testing on CIFAR10
+Files already downloaded and verified
+OOD Test size:  2000
+OOD Detection Accuracy: 99.80%
+AUROC: 99.92%
+######################################
+Testing on SVHN
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+OOD Test size:  2000
+OOD Detection Accuracy: 97.85%
+AUROC: 99.42%
+######################################
+Testing on ImageNet-c
+OOD Test size:  2000
+OOD Detection Accuracy: 98.65%
+AUROC: 99.49%
