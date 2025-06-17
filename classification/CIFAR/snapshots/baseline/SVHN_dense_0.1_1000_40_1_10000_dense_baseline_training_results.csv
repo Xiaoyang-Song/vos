@@ -1,0 +1,2 @@
+epoch,time(s),train_loss,test_loss,test_error(%)
+001,00070,0.886398,1.12422,39.48
