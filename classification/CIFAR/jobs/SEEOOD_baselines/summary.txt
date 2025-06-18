@@ -1,0 +1,30 @@
+Summary for mnist
+AUC: 99.3400
+TPR95: 98.4600
+TPR99: 83.9000
+
+
+Summary for fashionmnist
+AUC: 91.3600
+TPR95: 58.1400
+TPR99: 32.6600
+
+
+Summary for mnist-fashionmnist
+AUC: 82.4500
+TPR95: 61.1500
+TPR99: 35.6000
+
+
+Summary for svhn
+AUC: 93.8900
+TPR95: 65.0700
+TPR99: 21.6600
+
+
+Summary for cifar10-svhn
+AUC: 93.9400
+TPR95: 57.4600
+TPR99: 12.5100
+
+

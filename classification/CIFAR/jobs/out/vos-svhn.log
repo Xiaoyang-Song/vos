@@ -1,0 +1,132 @@
+ic| len(dset): 73257
+ic| len(dset): 26032
+{'dataset': 'SVHN', 'model': 'dense', 'calibration': False, 'epochs': 100, 'learning_rate': 0.1, 'batch_size': 128, 'test_bs': 200, 'momentum': 0.9, 'decay': 0.0001, 'layers': 40, 'widen_factor': 2, 'droprate': 0.3, 'save': './snapshots/baseline', 'load': '', 'test': False, 'ngpu': 1, 'prefetch': 16, 'start_epoch': 40, 'sample_number': 1000, 'select': 1, 'sample_from': 10000, 'loss_weight': 0.1}
+Using downloaded and verified file: ./Datasets/SVHN/train_32x32.mat
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+Beginning Training
+
+  0%|          | 0/100 [00:00<?, ?it/s]  1%|          | 1/100 [01:01<1:41:13, 61.35s/it]Epoch   1 | Time    61 | Train Loss 0.9105 | Test Loss 1.014 | Test Error 37.58
+  2%|▏         | 2/100 [02:03<1:40:43, 61.67s/it]Epoch   2 | Time    61 | Train Loss 0.3789 | Test Loss 0.356 | Test Error 11.26
+  3%|▎         | 3/100 [03:03<1:38:28, 60.91s/it]Epoch   3 | Time    60 | Train Loss 0.2823 | Test Loss 0.236 | Test Error 6.89
+  4%|▍         | 4/100 [04:03<1:36:53, 60.56s/it]Epoch   4 | Time    60 | Train Loss 0.2274 | Test Loss 0.280 | Test Error 8.68
+  5%|▌         | 5/100 [05:03<1:35:56, 60.60s/it]Epoch   5 | Time    60 | Train Loss 0.1717 | Test Loss 0.200 | Test Error 5.44
+  6%|▌         | 6/100 [06:03<1:34:38, 60.41s/it]Epoch   6 | Time    60 | Train Loss 0.1726 | Test Loss 0.189 | Test Error 5.62
+  7%|▋         | 7/100 [07:04<1:33:26, 60.28s/it]Epoch   7 | Time    60 | Train Loss 0.1828 | Test Loss 0.191 | Test Error 5.33
+  8%|▊         | 8/100 [08:06<1:33:18, 60.86s/it]Epoch   8 | Time    62 | Train Loss 0.1593 | Test Loss 0.210 | Test Error 6.04
+  9%|▉         | 9/100 [09:07<1:32:22, 60.91s/it]Epoch   9 | Time    61 | Train Loss 0.0894 | Test Loss 0.193 | Test Error 5.61
+ 10%|█         | 10/100 [10:08<1:31:47, 61.20s/it]Epoch  10 | Time    61 | Train Loss 0.1240 | Test Loss 0.179 | Test Error 5.08
+ 11%|█         | 11/100 [11:08<1:30:11, 60.80s/it]Epoch  11 | Time    59 | Train Loss 0.1565 | Test Loss 0.198 | Test Error 5.65
+ 12%|█▏        | 12/100 [12:08<1:28:46, 60.53s/it]Epoch  12 | Time    59 | Train Loss 0.1127 | Test Loss 0.193 | Test Error 5.45
+ 13%|█▎        | 13/100 [13:08<1:27:29, 60.34s/it]Epoch  13 | Time    59 | Train Loss 0.1093 | Test Loss 0.278 | Test Error 7.24
+ 14%|█▍        | 14/100 [14:08<1:26:17, 60.20s/it]Epoch  14 | Time    59 | Train Loss 0.0887 | Test Loss 0.233 | Test Error 6.59
+ 15%|█▌        | 15/100 [15:08<1:25:08, 60.11s/it]Epoch  15 | Time    59 | Train Loss 0.0885 | Test Loss 0.183 | Test Error 4.96
+ 16%|█▌        | 16/100 [16:10<1:24:49, 60.59s/it]Epoch  16 | Time    61 | Train Loss 0.0924 | Test Loss 0.202 | Test Error 5.44
+ 17%|█▋        | 17/100 [17:10<1:23:31, 60.38s/it]Epoch  17 | Time    59 | Train Loss 0.1311 | Test Loss 0.233 | Test Error 6.75
+ 18%|█▊        | 18/100 [18:10<1:22:38, 60.47s/it]Epoch  18 | Time    60 | Train Loss 0.0915 | Test Loss 0.185 | Test Error 5.25
+ 19%|█▉        | 19/100 [19:10<1:21:25, 60.32s/it]Epoch  19 | Time    59 | Train Loss 0.0979 | Test Loss 0.187 | Test Error 5.05
+ 20%|██        | 20/100 [20:10<1:20:16, 60.21s/it]Epoch  20 | Time    59 | Train Loss 0.0886 | Test Loss 0.187 | Test Error 5.03
+ 21%|██        | 21/100 [21:10<1:19:10, 60.13s/it]Epoch  21 | Time    59 | Train Loss 0.0958 | Test Loss 0.184 | Test Error 5.17
+ 22%|██▏       | 22/100 [22:10<1:18:08, 60.11s/it]Epoch  22 | Time    60 | Train Loss 0.1109 | Test Loss 0.173 | Test Error 4.72
+ 23%|██▎       | 23/100 [23:11<1:17:14, 60.19s/it]Epoch  23 | Time    60 | Train Loss 0.0839 | Test Loss 0.173 | Test Error 4.72
+ 24%|██▍       | 24/100 [24:10<1:16:08, 60.11s/it]Epoch  24 | Time    59 | Train Loss 0.0709 | Test Loss 0.184 | Test Error 5.02
+ 25%|██▌       | 25/100 [25:11<1:15:11, 60.15s/it]Epoch  25 | Time    60 | Train Loss 0.0693 | Test Loss 0.195 | Test Error 5.47
+ 26%|██▌       | 26/100 [26:11<1:14:06, 60.08s/it]Epoch  26 | Time    59 | Train Loss 0.1093 | Test Loss 0.167 | Test Error 4.52
+ 27%|██▋       | 27/100 [27:11<1:13:03, 60.04s/it]Epoch  27 | Time    59 | Train Loss 0.0936 | Test Loss 0.182 | Test Error 5.02
+ 28%|██▊       | 28/100 [28:11<1:12:00, 60.01s/it]Epoch  28 | Time    59 | Train Loss 0.0888 | Test Loss 0.174 | Test Error 4.66
+ 29%|██▉       | 29/100 [29:10<1:10:59, 59.99s/it]Epoch  29 | Time    59 | Train Loss 0.0765 | Test Loss 0.202 | Test Error 5.75
+ 30%|███       | 30/100 [30:10<1:09:59, 59.99s/it]Epoch  30 | Time    59 | Train Loss 0.0781 | Test Loss 0.213 | Test Error 5.78
+ 31%|███       | 31/100 [31:10<1:08:58, 59.98s/it]Epoch  31 | Time    59 | Train Loss 0.0858 | Test Loss 0.195 | Test Error 5.29
+ 32%|███▏      | 32/100 [32:13<1:08:56, 60.83s/it]Epoch  32 | Time    62 | Train Loss 0.0961 | Test Loss 0.168 | Test Error 4.82
+ 33%|███▎      | 33/100 [33:13<1:07:38, 60.58s/it]Epoch  33 | Time    59 | Train Loss 0.0822 | Test Loss 0.174 | Test Error 4.58
+ 34%|███▍      | 34/100 [34:13<1:06:25, 60.39s/it]Epoch  34 | Time    59 | Train Loss 0.0964 | Test Loss 0.212 | Test Error 5.85
+ 35%|███▌      | 35/100 [35:15<1:05:47, 60.73s/it]Epoch  35 | Time    61 | Train Loss 0.0829 | Test Loss 0.162 | Test Error 4.17
+ 36%|███▌      | 36/100 [36:17<1:05:19, 61.24s/it]Epoch  36 | Time    62 | Train Loss 0.0714 | Test Loss 0.177 | Test Error 4.68
+ 37%|███▋      | 37/100 [37:17<1:03:54, 60.86s/it]Epoch  37 | Time    59 | Train Loss 0.1039 | Test Loss 0.196 | Test Error 5.27
+ 38%|███▊      | 38/100 [38:17<1:02:38, 60.63s/it]Epoch  38 | Time    60 | Train Loss 0.0907 | Test Loss 0.196 | Test Error 5.45
+ 39%|███▉      | 39/100 [39:20<1:02:13, 61.20s/it]Epoch  39 | Time    62 | Train Loss 0.0631 | Test Loss 0.196 | Test Error 4.81
+ 40%|████      | 40/100 [40:20<1:00:50, 60.84s/it]Epoch  40 | Time    59 | Train Loss 0.1030 | Test Loss 0.192 | Test Error 5.08
+ 41%|████      | 41/100 [41:30<1:02:28, 63.54s/it]Epoch  41 | Time    69 | Train Loss 0.1268 | Test Loss 0.185 | Test Error 5.02
+ 42%|████▏     | 42/100 [42:39<1:03:04, 65.25s/it]Epoch  42 | Time    69 | Train Loss 0.1102 | Test Loss 0.187 | Test Error 5.08
+ 43%|████▎     | 43/100 [43:50<1:03:47, 67.14s/it]Epoch  43 | Time    71 | Train Loss 0.1192 | Test Loss 0.173 | Test Error 4.49
+ 44%|████▍     | 44/100 [45:00<1:03:15, 67.78s/it]Epoch  44 | Time    69 | Train Loss 0.0950 | Test Loss 0.181 | Test Error 4.74
+ 45%|████▌     | 45/100 [46:09<1:02:32, 68.22s/it]Epoch  45 | Time    69 | Train Loss 0.0921 | Test Loss 0.214 | Test Error 5.56
+ 46%|████▌     | 46/100 [47:18<1:01:41, 68.54s/it]Epoch  46 | Time    69 | Train Loss 0.0970 | Test Loss 0.160 | Test Error 4.20
+ 47%|████▋     | 47/100 [48:28<1:00:46, 68.80s/it]Epoch  47 | Time    69 | Train Loss 0.1121 | Test Loss 0.160 | Test Error 4.29
+ 48%|████▊     | 48/100 [49:37<59:51, 69.06s/it]  Epoch  48 | Time    69 | Train Loss 0.0814 | Test Loss 0.190 | Test Error 4.89
+ 49%|████▉     | 49/100 [50:47<58:53, 69.29s/it]Epoch  49 | Time    69 | Train Loss 0.0750 | Test Loss 0.200 | Test Error 5.34
+ 50%|█████     | 50/100 [51:56<57:44, 69.28s/it]Epoch  50 | Time    69 | Train Loss 0.1036 | Test Loss 0.172 | Test Error 4.55
+ 51%|█████     | 51/100 [53:06<56:35, 69.29s/it]Epoch  51 | Time    69 | Train Loss 0.0557 | Test Loss 0.142 | Test Error 3.55
+ 52%|█████▏    | 52/100 [54:15<55:26, 69.30s/it]Epoch  52 | Time    69 | Train Loss 0.0416 | Test Loss 0.138 | Test Error 3.47
+ 53%|█████▎    | 53/100 [55:24<54:16, 69.28s/it]Epoch  53 | Time    69 | Train Loss 0.0411 | Test Loss 0.138 | Test Error 3.47
+ 54%|█████▍    | 54/100 [56:33<53:06, 69.27s/it]Epoch  54 | Time    69 | Train Loss 0.0390 | Test Loss 0.137 | Test Error 3.33
+ 55%|█████▌    | 55/100 [57:43<51:57, 69.27s/it]Epoch  55 | Time    69 | Train Loss 0.0389 | Test Loss 0.138 | Test Error 3.35
+ 56%|█████▌    | 56/100 [58:52<50:48, 69.28s/it]Epoch  56 | Time    69 | Train Loss 0.0454 | Test Loss 0.139 | Test Error 3.37
+ 57%|█████▋    | 57/100 [1:00:01<49:39, 69.28s/it]Epoch  57 | Time    69 | Train Loss 0.0383 | Test Loss 0.138 | Test Error 3.34
+ 58%|█████▊    | 58/100 [1:01:11<48:29, 69.28s/it]Epoch  58 | Time    69 | Train Loss 0.0377 | Test Loss 0.139 | Test Error 3.34
+ 59%|█████▉    | 59/100 [1:02:20<47:20, 69.28s/it]Epoch  59 | Time    69 | Train Loss 0.0357 | Test Loss 0.139 | Test Error 3.32
+ 60%|██████    | 60/100 [1:03:29<46:11, 69.28s/it]Epoch  60 | Time    69 | Train Loss 0.0387 | Test Loss 0.140 | Test Error 3.36
+ 61%|██████    | 61/100 [1:04:40<45:15, 69.62s/it]Epoch  61 | Time    70 | Train Loss 0.0382 | Test Loss 0.141 | Test Error 3.39
+ 62%|██████▏   | 62/100 [1:05:49<44:01, 69.52s/it]Epoch  62 | Time    69 | Train Loss 0.0398 | Test Loss 0.141 | Test Error 3.36
+ 63%|██████▎   | 63/100 [1:06:58<42:49, 69.46s/it]Epoch  63 | Time    69 | Train Loss 0.0320 | Test Loss 0.142 | Test Error 3.34
+ 64%|██████▍   | 64/100 [1:08:07<41:38, 69.41s/it]Epoch  64 | Time    69 | Train Loss 0.0329 | Test Loss 0.143 | Test Error 3.31
+ 65%|██████▌   | 65/100 [1:09:17<40:27, 69.36s/it]Epoch  65 | Time    69 | Train Loss 0.0349 | Test Loss 0.144 | Test Error 3.36
+ 66%|██████▌   | 66/100 [1:10:26<39:17, 69.33s/it]Epoch  66 | Time    69 | Train Loss 0.0320 | Test Loss 0.144 | Test Error 3.36
+ 67%|██████▋   | 67/100 [1:11:35<38:07, 69.32s/it]Epoch  67 | Time    69 | Train Loss 0.0334 | Test Loss 0.144 | Test Error 3.34
+ 68%|██████▊   | 68/100 [1:12:44<36:57, 69.30s/it]Epoch  68 | Time    69 | Train Loss 0.0370 | Test Loss 0.145 | Test Error 3.34
+ 69%|██████▉   | 69/100 [1:13:54<35:49, 69.34s/it]Epoch  69 | Time    69 | Train Loss 0.0353 | Test Loss 0.145 | Test Error 3.35
+ 70%|███████   | 70/100 [1:15:03<34:39, 69.32s/it]Epoch  70 | Time    69 | Train Loss 0.0344 | Test Loss 0.147 | Test Error 3.33
+ 71%|███████   | 71/100 [1:16:13<33:30, 69.34s/it]Epoch  71 | Time    69 | Train Loss 0.0364 | Test Loss 0.146 | Test Error 3.33
+ 72%|███████▏  | 72/100 [1:17:23<32:30, 69.66s/it]Epoch  72 | Time    70 | Train Loss 0.0301 | Test Loss 0.147 | Test Error 3.35
+ 73%|███████▎  | 73/100 [1:18:34<31:28, 69.94s/it]Epoch  73 | Time    70 | Train Loss 0.0309 | Test Loss 0.147 | Test Error 3.37
+ 74%|███████▍  | 74/100 [1:19:44<30:19, 69.97s/it]Epoch  74 | Time    70 | Train Loss 0.0292 | Test Loss 0.148 | Test Error 3.33
+ 75%|███████▌  | 75/100 [1:20:53<29:03, 69.75s/it]Epoch  75 | Time    69 | Train Loss 0.0308 | Test Loss 0.149 | Test Error 3.37
+ 76%|███████▌  | 76/100 [1:22:04<28:03, 70.15s/it]Epoch  76 | Time    71 | Train Loss 0.0289 | Test Loss 0.147 | Test Error 3.33
+ 77%|███████▋  | 77/100 [1:23:16<27:03, 70.59s/it]Epoch  77 | Time    71 | Train Loss 0.0312 | Test Loss 0.147 | Test Error 3.30
+ 78%|███████▊  | 78/100 [1:24:25<25:44, 70.20s/it]Epoch  78 | Time    69 | Train Loss 0.0293 | Test Loss 0.149 | Test Error 3.37
+ 79%|███████▉  | 79/100 [1:25:34<24:29, 69.97s/it]Epoch  79 | Time    69 | Train Loss 0.0309 | Test Loss 0.148 | Test Error 3.30
+ 80%|████████  | 80/100 [1:26:44<23:15, 69.79s/it]Epoch  80 | Time    69 | Train Loss 0.0368 | Test Loss 0.147 | Test Error 3.33
+ 81%|████████  | 81/100 [1:27:53<22:03, 69.63s/it]Epoch  81 | Time    69 | Train Loss 0.0300 | Test Loss 0.148 | Test Error 3.36
+ 82%|████████▏ | 82/100 [1:29:02<20:51, 69.54s/it]Epoch  82 | Time    69 | Train Loss 0.0369 | Test Loss 0.149 | Test Error 3.35
+ 83%|████████▎ | 83/100 [1:30:12<19:45, 69.76s/it]Epoch  83 | Time    70 | Train Loss 0.0312 | Test Loss 0.149 | Test Error 3.32
+ 84%|████████▍ | 84/100 [1:31:23<18:39, 69.97s/it]Epoch  84 | Time    70 | Train Loss 0.0347 | Test Loss 0.149 | Test Error 3.35
+ 85%|████████▌ | 85/100 [1:32:33<17:31, 70.13s/it]Epoch  85 | Time    70 | Train Loss 0.0316 | Test Loss 0.148 | Test Error 3.36
+ 86%|████████▌ | 86/100 [1:33:44<16:23, 70.24s/it]Epoch  86 | Time    70 | Train Loss 0.0300 | Test Loss 0.149 | Test Error 3.34
+ 87%|████████▋ | 87/100 [1:34:54<15:13, 70.30s/it]Epoch  87 | Time    70 | Train Loss 0.0282 | Test Loss 0.148 | Test Error 3.34
+ 88%|████████▊ | 88/100 [1:36:05<14:04, 70.35s/it]Epoch  88 | Time    70 | Train Loss 0.0284 | Test Loss 0.149 | Test Error 3.36
+ 89%|████████▉ | 89/100 [1:37:15<12:54, 70.39s/it]Epoch  89 | Time    70 | Train Loss 0.0296 | Test Loss 0.149 | Test Error 3.33
+ 90%|█████████ | 90/100 [1:38:26<11:44, 70.42s/it]Epoch  90 | Time    70 | Train Loss 0.0320 | Test Loss 0.149 | Test Error 3.38
+ 91%|█████████ | 91/100 [1:39:36<10:33, 70.44s/it]Epoch  91 | Time    70 | Train Loss 0.0289 | Test Loss 0.148 | Test Error 3.33
+ 92%|█████████▏| 92/100 [1:40:47<09:23, 70.44s/it]Epoch  92 | Time    70 | Train Loss 0.0292 | Test Loss 0.147 | Test Error 3.31
+ 93%|█████████▎| 93/100 [1:41:57<08:13, 70.45s/it]Epoch  93 | Time    70 | Train Loss 0.0292 | Test Loss 0.148 | Test Error 3.36
+ 94%|█████████▍| 94/100 [1:43:08<07:02, 70.46s/it]Epoch  94 | Time    70 | Train Loss 0.0289 | Test Loss 0.148 | Test Error 3.33
+ 95%|█████████▌| 95/100 [1:44:18<05:52, 70.48s/it]Epoch  95 | Time    70 | Train Loss 0.0285 | Test Loss 0.148 | Test Error 3.32
+ 96%|█████████▌| 96/100 [1:45:29<04:42, 70.50s/it]Epoch  96 | Time    70 | Train Loss 0.0284 | Test Loss 0.148 | Test Error 3.37
+ 97%|█████████▋| 97/100 [1:46:39<03:31, 70.51s/it]Epoch  97 | Time    70 | Train Loss 0.0341 | Test Loss 0.148 | Test Error 3.35
+ 98%|█████████▊| 98/100 [1:47:50<02:21, 70.51s/it]Epoch  98 | Time    70 | Train Loss 0.0294 | Test Loss 0.148 | Test Error 3.35
+ 99%|█████████▉| 99/100 [1:49:00<01:10, 70.51s/it]Epoch  99 | Time    70 | Train Loss 0.0343 | Test Loss 0.150 | Test Error 3.36
+100%|██████████| 100/100 [1:50:11<00:00, 70.55s/it]100%|██████████| 100/100 [1:50:11<00:00, 66.11s/it]
+Epoch 100 | Time    70 | Train Loss 0.0283 | Test Loss 0.148 | Test Error 3.36
+ic| len(dset): 73257
+ic| len(dset): 26032
+Namespace(test_bs=200, dataset='SVHN', num_to_avg=5, validate=False, use_xent=False, method_name='SVHN_dense_baseline_dense_0.1_1000_40_1_10000', layers=40, widen_factor=2, droprate=0.3, load='./snapshots', ngpu=1, prefetch=1, out_as_pos=False, score='energy', T=1.0, noise=0, model_name='dense')
+Using downloaded and verified file: ./Datasets/SVHN/train_32x32.mat
+Using downloaded and verified file: ./Datasets/SVHN/test_32x32.mat
+Model restored! Epoch: 99
+Error Rate 3.36
+
+
+Error Detection
+			SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+FPR95:			60.22
+FPR99:			21.62
+AUROC:			92.69
+AUPR:			43.96
+SVHN
+
+
+SVHN Detection
+[ -7.730871 -14.133704  -8.904889] [-2.9157734 -7.9398055 -2.9855824]
+				SVHN_dense_baseline_dense_0.1_1000_40_1_10000
+  TPR95 TPR99 AUROC AUPR
+65.07 & 21.66 & 93.89 & 99.06
+0.00 & 0.00 & 0.00 & 0.00
